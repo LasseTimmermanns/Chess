@@ -44,6 +44,10 @@ public class Field extends JLabel{
 		addComponentListener(onResize());
 		
 	}
+	
+	public void setColor() {
+		setBackground(Color.BLUE);
+	}
 
 	public void mark() {
 		marked = !marked;
@@ -76,6 +80,8 @@ public class Field extends JLabel{
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
+				System.out.println(position.toString());
+				
 				if(isOccupied()) {
 					for(Location l : getCurrentPiece().getPossibleMoves()) {
 						System.out.println(l.toString());

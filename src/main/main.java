@@ -31,11 +31,12 @@ public class main {
 			{{ROCK, KNIGHT, BISHOP, QUEEN, KING, BISHOP, KNIGHT, ROCK},
 			{PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN},
 			{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-			{EMPTY, EMPTY, EMPTY, ROCK, EMPTY, EMPTY, EMPTY, EMPTY},
 			{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+			{EMPTY, EMPTY, EMPTY, PAWN, EMPTY, EMPTY, EMPTY, EMPTY},
 			{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
 			{PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN},
 			{ROCK, KNIGHT, BISHOP, QUEEN, KING, BISHOP, KNIGHT, ROCK}};
+	
 	
 	public static void main(String[] args) {
 		instiantiateSkins();
@@ -51,22 +52,22 @@ public class main {
 	}
 	
 	private static void createFields() {
+		
 		//Schachbrett 8x8 Felder
-		for(int x = 0; x < ROWS; x++) {
-			for(int y = 0; y < COLS; y++) {
+		for(int y = ROWS - 1; y >= 0; y--) {
+			for(int x = 0; x < COLS; x++) {
 				//Ordnung im 2d array durch diese Schleifen
-				allFields2D[x][y] = new Field(new Location(x, y));
-				allFields[x * ROWS + y] = allFields2D[x][y];
+				allFields2D[y][x] = new Field(new Location(x, y));
+				allFields[y * ROWS + x] = allFields2D[x][y];
 			}
 		}
 	}
 
 	private static void putPieces() {
-		for(int x = 0; x < ROWS; x++) {
-			for(int y = 0; y < COLS; y++) {
-				//WHITE = 0, BLACK = 1
+		for(int y = 7; y >= 0; y--) {
+			for(int x = 0; x < COLS; x++) {
 				int color = y < (COLS / 2) ? 1 : 0;
-				Class piece = PIECES_ON_BOARD[y][x];				
+				Class piece = PIECES_ON_BOARD[7- y][7- x];				
 				
 				if(piece != null) {
 					try {
@@ -75,7 +76,7 @@ public class main {
 					} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 						e.printStackTrace();
 					}
-				}				
+				}	
 			}
 		}
 	}
@@ -102,10 +103,10 @@ public class main {
 	//Formel: (x + y) % 2 == 0
 	public static Color getFieldColor(int sum) {
 		if(sum % 2 == 0) {
-			return gui.WHITE;
+			return gui.BLACK;
 		}
 		
-		return gui.BLACK;
+		return gui.WHITE;
 	}
 	
 	public static ImageIcon resizeImage(ImageIcon old, int newWidth, int newHeight) {
