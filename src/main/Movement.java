@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import gui.Field;
 import piece.King;
+import piece.Knight;
 import piece.Pawn;
 import piece.Piece;
 
@@ -84,17 +85,13 @@ public class Movement {
 		int opponentsColor = k.getColor() == main.COLOR_WHITE ? main.COLOR_BLACK : main.COLOR_WHITE;
 		for(Location loc : new ArrayList<Location>(out)) { //Arraylist Kopie um ConcurrentModificationException zu vermeiden
 			if(loc.getField().isCoveredBy(opponentsColor)) {
-				System.out.println("removing" + loc);
 				out.remove(loc);
 			}
 			
 			if(k.getMoveCode(loc) == Piece.NOT_POSSIBLE_MOVE || k.getMoveCode(loc) == Piece.IS_COVERING) {
-				System.out.println("removing");
 				out.remove(loc);
 			}
 		}
-		
-		System.out.println(out.toArray());
 		
 		return out;
 	}
@@ -138,6 +135,30 @@ public class Movement {
 				canContinue = false;
 				break;
 			}
+		}
+		
+		return out;
+	}
+	
+	public static ArrayList<Location> getKnightMoves(Knight k, boolean cover) {
+		ArrayList<Location> out = new ArrayList<Location>();
+		Location current = k.getLocation();
+		
+		//Wenn die Summe aus positivem x und positivem y == 3 ist, ist es ein Springer Zug
+		for(int x = -2; x <= 2; x++) {
+			for(int y = -2; y <= 2; y++) {
+				if(Math.abs(x) + Math.abs(y) == 3) {
+					Location loc = new Location(current.X + x, current.Y + y);
+					
+					switch(k.getMoveCode(loc)) {
+					case Piece.IS_COVERING:
+						if(!cover) break;
+					case Piece.CAN_HIT:
+					case Piece.POSSIBLE_MOVE:
+						out.add(loc);
+					}
+				}
+			}	
 		}
 		
 		return out;
