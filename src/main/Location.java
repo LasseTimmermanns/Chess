@@ -15,7 +15,10 @@ public class Location {
 	}
 	
 	public Field getField() {
-		if(!isInBoard()) return null;
+		if(!isInBoard()) {
+			System.out.println("getField not in Boardrange");
+			 return null;
+		}
 		
 		return Field.getFieldByLocation(this);
 	}

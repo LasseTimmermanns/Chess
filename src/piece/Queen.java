@@ -18,9 +18,16 @@ public class Queen extends Piece{
 	}
 	
 	@Override
+	public void updateCoverings() {
+		ArrayList<Location> moves = Movement.getStraightMoves(this, true);
+		moves.addAll(Movement.getDiagonalMoves(this, true));
+		super.coverings = moves;
+	}
+	
+	@Override
 	public void updatePossibleMoves() {
-		ArrayList<Location> moves = Movement.getStraightMoves(this);
-		moves.addAll(Movement.getDiagonalMoves(this));
+		ArrayList<Location> moves = Movement.getStraightMoves(this, false);
+		moves.addAll(Movement.getDiagonalMoves(this, false));
 		super.possibleMoves = moves;
 	}
 

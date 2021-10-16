@@ -78,8 +78,6 @@ public class gui {
 	//rendern des GUIs
 	public void complete() {
 		jf.setVisible(true);
-		
-		System.out.println("complete");
 	}
 	
 }

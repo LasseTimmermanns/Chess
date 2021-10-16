@@ -12,14 +12,12 @@ import main.main;
 
 public class Piece {
 	
-	public static final int NOT_POSSIBLE_MOVE = 0, POSSIBLE_MOVE = 1, CAN_HIT = 2;
+	public static final int NULL = -1, NOT_POSSIBLE_MOVE = 0, POSSIBLE_MOVE = 1, CAN_HIT = 2, IS_COVERING = 3;
 	public static ArrayList<Piece> all = new ArrayList<Piece>();
 	private ImageIcon icon;
 	private String name;
 	private Location location;
-	
-	//possibleHits beinhaltet auch Felder, die die Figur deckt
-	protected ArrayList<Location> possibleHits, possibleMoves;
+	protected ArrayList<Location> coverings, possibleMoves;
 	private int value, color;
 	private boolean movesAreMarked, alreadyMoved;
 	
@@ -37,13 +35,13 @@ public class Piece {
 		all.add(this);
 	}
 	
-	public int getMoveCode(Location current) {
+	public int getMoveCode(Location newLoc) {
 		
-		if(!current.isInBoard()) return NOT_POSSIBLE_MOVE;
-		if(current.getField().isOccupied()) {
-			Piece p = current.getField().getCurrentPiece();
+		if(!newLoc.isInBoard()) return NOT_POSSIBLE_MOVE;
+		if(newLoc.getField().isOccupied()) {
+			Piece p = newLoc.getField().getCurrentPiece();
 			if(p.getColor() != getColor()) return CAN_HIT;
-			return NOT_POSSIBLE_MOVE;
+			return IS_COVERING;
 		}
 		
 		return POSSIBLE_MOVE;
@@ -64,11 +62,11 @@ public class Piece {
 	
 	public void updatePossibleMoves() {}
 	
-	public ArrayList<Location> getPossibleHits() {
-		return possibleHits;
+	public ArrayList<Location> getCoverings() {
+		return coverings;
 	}
 	
-	public void updatePossibleHits() {}
+	public void updateCoverings() {}
 	
 	public ImageIcon getIcon() {
 		return icon;

@@ -27,6 +27,7 @@ public class Field extends JLabel{
 	private Location position;
 	private Piece currentPiece;
 	private long newestResize;
+	private boolean[] coveredBy;
 	
 	
 	public Field(Location loc) {
@@ -34,6 +35,7 @@ public class Field extends JLabel{
 		this.position = loc;
 		this.obj = this;
 		this.fieldColor = main.getFieldColor(loc.X + loc.Y);
+		this.coveredBy = new boolean[]{false, false};
 		
 		setOpaque(true);
 		setBackground(fieldColor);
@@ -186,4 +188,11 @@ public class Field extends JLabel{
 		return currentPiece;
 	}
 	
+	public boolean isCoveredBy(int color) {
+		return coveredBy[color];
+	}
+	
+	public void setCoveredBy(int color, boolean value) {
+		coveredBy[color] = value;
+	}
 }

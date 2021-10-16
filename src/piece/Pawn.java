@@ -23,8 +23,13 @@ public class Pawn extends Piece{
 	}
 	
 	@Override
+	public void updateCoverings() {
+		super.coverings = Movement.getPawnMoves(this, true);
+	}
+	
+	@Override
 	public void updatePossibleMoves() {
-		super.possibleMoves = Movement.getPawnMoves(this);
+		super.possibleMoves = Movement.getPawnMoves(this, false);
 	}
 
 }

@@ -28,15 +28,16 @@ public class main {
 	public static final Class PAWN = Pawn.class, KNIGHT = Knight.class, BISHOP = 
 			Bishop.class, ROCK = Rock.class, QUEEN = Queen.class, KING = King.class, EMPTY = null;
 	public static final Class[][] PIECES_ON_BOARD = 
-			{{ROCK, KNIGHT, BISHOP, QUEEN, KING, BISHOP, KNIGHT, ROCK},
+			{{ROCK, KNIGHT, BISHOP, QUEEN, EMPTY, BISHOP, KNIGHT, ROCK},
 			{PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN},
 			{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
 			{EMPTY, EMPTY, EMPTY, QUEEN, EMPTY, EMPTY, EMPTY, EMPTY},
 			{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-			{EMPTY, EMPTY, EMPTY, PAWN, EMPTY, EMPTY, EMPTY, EMPTY},
+			{EMPTY, EMPTY, KING, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
 			{PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN},
-			{ROCK, KNIGHT, BISHOP, QUEEN, KING, BISHOP, KNIGHT, ROCK}};
+			{ROCK, KNIGHT, BISHOP, QUEEN, EMPTY, BISHOP, KNIGHT, ROCK}};
 	public static Piece lastSelected = null;
+	public static final int COLOR_WHITE = 0, COLOR_BLACK = 1;
 	
 	
 	public static void main(String[] args) {
@@ -46,15 +47,32 @@ public class main {
 		createFields(); //Felder werden erstellt
 		putPieces();
 		
+		g.complete(); //JFrame wird sichtbar gemacht
+		
+		updatePieceCoverings();
+		updateFieldCoverings();
 		updatePieceMoves();
 		
-		g.complete(); //JFrame wird sichtbar gemacht	
-		
+	}
+	
+	public static void updateFieldCoverings() {
+		for(Piece p : Piece.all) {
+			if(p.getCoverings() == null) continue;
+			for(Location loc : p.getCoverings()) {
+				loc.getField().setCoveredBy(p.getColor(), true);
+			}
+		}
 	}
 	
 	public static void updatePieceMoves() {
 		for(Piece p : Piece.all) {
 			p.updatePossibleMoves();
+		}
+	}
+	
+	public static void updatePieceCoverings() {
+		for(Piece p : Piece.all) {
+			p.updateCoverings();
 		}
 	}
 	
@@ -73,7 +91,7 @@ public class main {
 	private static void putPieces() {
 		for(int y = 7; y >= 0; y--) {
 			for(int x = 0; x < COLS; x++) {
-				int color = y < (COLS / 2) ? 1 : 0;
+				int color = y < (COLS / 2) ? COLOR_BLACK : COLOR_WHITE;
 				Class piece = PIECES_ON_BOARD[7- y][7- x];				
 				
 				if(piece != null) {

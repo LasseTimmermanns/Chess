@@ -16,7 +16,12 @@ public class Bishop extends Piece{
 	}
 	
 	@Override
+	public void updateCoverings(){
+		super.coverings = Movement.getDiagonalMoves(this, true);
+	}
+	
+	@Override
 	public void updatePossibleMoves(){
-		super.possibleMoves = Movement.getDiagonalMoves(this);
+		super.possibleMoves = Movement.getDiagonalMoves(this, false);
 	}
 }

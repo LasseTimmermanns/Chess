@@ -16,8 +16,13 @@ public class Rock extends Piece{
 	}
 	
 	@Override
+	public void updateCoverings() {
+		super.coverings = Movement.getStraightMoves(this, true);
+	}
+	
+	@Override
 	public void updatePossibleMoves() {
-		super.possibleMoves = Movement.getStraightMoves(this);
+		super.possibleMoves = Movement.getStraightMoves(this, false);
 	}
 	
 	
