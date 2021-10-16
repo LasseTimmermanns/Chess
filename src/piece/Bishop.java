@@ -1,5 +1,7 @@
 package piece;
 
+import java.util.ArrayList;
+
 import javax.swing.ImageIcon;
 
 import main.Location;
@@ -14,7 +16,7 @@ public class Bishop extends Piece{
 	}
 	
 	@Override
-	public Location[] getPossibleMoves() {
-		return Movement.getVerticalMoves(this);
+	public void updatePossibleMoves(){
+		super.possibleMoves = Movement.getDiagonalMoves(this);
 	}
 }

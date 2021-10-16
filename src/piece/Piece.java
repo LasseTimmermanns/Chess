@@ -1,6 +1,7 @@
 package piece;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
@@ -11,11 +12,16 @@ import main.main;
 
 public class Piece {
 	
-	public static final int NOT_POSSIBLE_MOVE = 0, POSSIBLE_MOVE = 1, LAST_MOVE = 2;
+	public static final int NOT_POSSIBLE_MOVE = 0, POSSIBLE_MOVE = 1, CAN_HIT = 2;
+	public static ArrayList<Piece> all = new ArrayList<Piece>();
 	private ImageIcon icon;
 	private String name;
 	private Location location;
+	
+	//possibleHits beinhaltet auch Felder, die die Figur deckt
+	protected ArrayList<Location> possibleHits, possibleMoves;
 	private int value, color;
+	private boolean movesAreMarked, alreadyMoved;
 	
 	
 	public Piece(String name, int color, Location loc, ImageIcon icon, int value) {
@@ -24,8 +30,11 @@ public class Piece {
 		this.location = loc;
 		this.icon = icon;
 		this.value = value;
-		
+		this.movesAreMarked = false;
+		this.alreadyMoved = false;
+
 		Field.getFieldByLocation(loc).movePieceHere(this);
+		all.add(this);
 	}
 	
 	public int getMoveCode(Location current) {
@@ -33,7 +42,7 @@ public class Piece {
 		if(!current.isInBoard()) return NOT_POSSIBLE_MOVE;
 		if(current.getField().isOccupied()) {
 			Piece p = current.getField().getCurrentPiece();
-			if(p.getColor() != getColor()) return LAST_MOVE;
+			if(p.getColor() != getColor()) return CAN_HIT;
 			return NOT_POSSIBLE_MOVE;
 		}
 		
@@ -41,9 +50,25 @@ public class Piece {
 	
 	}
 	
-	public Location[] getPossibleMoves() {
-		return null;
+	public boolean isAlreadyMoved() {
+		return alreadyMoved;
 	}
+	
+	public void setAlreadyMoved() {
+		this.alreadyMoved = true;
+	}
+	
+	public ArrayList<Location> getPossibleMoves() {
+		return possibleMoves;
+	}
+	
+	public void updatePossibleMoves() {}
+	
+	public ArrayList<Location> getPossibleHits() {
+		return possibleHits;
+	}
+	
+	public void updatePossibleHits() {}
 	
 	public ImageIcon getIcon() {
 		return icon;
@@ -65,6 +90,21 @@ public class Piece {
 		return color;
 	}
 
+	public boolean movesAreMarked() {
+		return movesAreMarked;
+	}
+	
+	public void setMovesAreMarked(boolean movesAreMarked) {
+		this.movesAreMarked = movesAreMarked;
+	}
+	
+	public void markMoves() {
+		for(Location l : this.getPossibleMoves()) {
+			l.getField().mark();
+		}
+		
+		this.movesAreMarked = !movesAreMarked;
+	}
 	
 	
 	

@@ -1,5 +1,7 @@
 package piece;
 
+import java.util.ArrayList;
+
 import javax.swing.ImageIcon;
 
 import com.sun.tools.javac.util.ArrayUtils;
@@ -16,8 +18,10 @@ public class Queen extends Piece{
 	}
 	
 	@Override
-	public Location[] getPossibleMoves() {
-		return util.mergeLocations(Movement.getHorizontalMoves(this), Movement.getVerticalMoves(this));
+	public void updatePossibleMoves() {
+		ArrayList<Location> moves = Movement.getStraightMoves(this);
+		moves.addAll(Movement.getDiagonalMoves(this));
+		super.possibleMoves = moves;
 	}
 
 }

@@ -3,97 +3,78 @@ package main;
 import java.util.ArrayList;
 
 import gui.Field;
+import piece.King;
 import piece.Pawn;
 import piece.Piece;
 
 public class Movement {
 
-	public static Location[] getHorizontalMoves(Piece p) {
-		//Gerade Züge
+	public static ArrayList<Location> getStraightMoves(Piece p) {
 		ArrayList<Location> possibleMoves = new ArrayList<Location>();
 		
-		Location start = p.getLocation();
+		int x = p.getLocation().X;
+		int y = p.getLocation().Y;
 		
-		//Züge nach links
-		int x = start.X;
-		int y = start.Y;
+		possibleMoves.addAll(getMoves(x, y, 1, 0, p)); //Rechts
+		possibleMoves.addAll(getMoves(x, y, (-1), 0, p)); //Links
+		possibleMoves.addAll(getMoves(x, y, 0, 1, p)); //Oben
+		possibleMoves.addAll(getMoves(x, y, 0, (-1), p)); //Unten
 		
-		for(Location loc : getMoves(x, y, 1, 0, p)) {
-			possibleMoves.add(loc);
-		}
-		
-		for(Location loc : getMoves(x, y, (-1), 0, p)) {
-			possibleMoves.add(loc);
-		}
-		
-		for(Location loc : getMoves(x, y, 0, 1, p)) {
-			possibleMoves.add(loc);
-		}
-		
-		for(Location loc : getMoves(x, y, 0, (-1), p)) {
-			possibleMoves.add(loc);
-		}
-		
-		return toArray(possibleMoves);
+		return possibleMoves;
 	}
 	
-	public static Location[] getVerticalMoves(Piece p) {
-		//Gerade Züge
+	public static ArrayList<Location> getDiagonalMoves(Piece p) {
 		ArrayList<Location> possibleMoves = new ArrayList<Location>();
 		
-		Location start = p.getLocation();
+		int x = p.getLocation().X;
+		int y = p.getLocation().Y;
 		
-		//Züge nach links
-		int x = start.X;
-		int y = start.Y;
+		possibleMoves.addAll(getMoves(x, y, 1, 1, p)); //Oben rechts
+		possibleMoves.addAll(getMoves(x, y, (-1), 1, p)); //Oben links
+		possibleMoves.addAll(getMoves(x, y, 1, (-1), p)); //Unten rechts
+		possibleMoves.addAll(getMoves(x, y, (-1), (-1), p)); //Unten links
 		
-		for(Location loc : getMoves(x, y, 1, 1, p)) {
-			possibleMoves.add(loc);
-		}
-		
-		for(Location loc : getMoves(x, y, (-1), 1, p)) {
-			possibleMoves.add(loc);
-		}
-		
-		for(Location loc : getMoves(x, y, 1, (-1), p)) {
-			possibleMoves.add(loc);
-		}
-		
-		for(Location loc : getMoves(x, y, (-1), (-1), p)) {
-			possibleMoves.add(loc);
-		}
-		
-		return toArray(possibleMoves);
+		return possibleMoves;
 	}
 	
-	public static Location[] getPawnMoves(Pawn p) {
+	public static ArrayList<Location> getPawnMoves(Pawn p) {
 		ArrayList<Location> possibleMoves = new ArrayList<Location>();
 			
-		Location frontLocation = new Location(p.getLocation().X, p.getLocation().Y + p.getDirection()),
-				diagonalLeft = new Location(frontLocation.X - 1, frontLocation.Y),
-				diagonalRight = new Location(frontLocation.X + 1, frontLocation.Y);
+		//Zuege nach vorne, nach links und nach rechts
+		Location forward = new Location(p.getLocation().X, p.getLocation().Y + p.getDirection()),
+				doubleForward = new Location(p.getLocation().X, p.getLocation().Y + (2 * p.getDirection())),
+				diagonalLeft = new Location(forward.X - 1, forward.Y),
+				diagonalRight = new Location(forward.X + 1, forward.Y);
 		
-		Field.getFieldByLocation(frontLocation).setColor();
+		possibleMoves = addLocationWhenCondition(p, forward, new int[]{Piece.POSSIBLE_MOVE}, possibleMoves);
+		possibleMoves = addLocationWhenCondition(p, diagonalLeft, new int[]{Piece.CAN_HIT}, possibleMoves);
+		possibleMoves = addLocationWhenCondition(p, diagonalRight, new int[]{Piece.CAN_HIT}, possibleMoves);
 		
-		Location[] locs = {frontLocation, diagonalLeft, diagonalRight};
-		for(Location loc : locs) {
+		//Doppelt nach vorne
+		if(p.getMoveCode(forward) == Piece.POSSIBLE_MOVE && !p.isAlreadyMoved()) {
+			possibleMoves = addLocationWhenCondition(p, doubleForward, new int[]{Piece.POSSIBLE_MOVE}, possibleMoves);
+		}
+		
+		return possibleMoves;
+	}
+	
+	public static ArrayList<Location> getKingMoves(King k) {
+		
+		
+		return null;
+	}
+	
+	//Methode fügt Location hinzu, wenn eine der Bedingungen erfüllt ist
+	private static ArrayList<Location> addLocationWhenCondition(Piece p, Location loc, int[] conditions, ArrayList<Location> moves){
 			
-			System.out.println(loc.toString() + p.getMoveCode(loc));
-			if(p.getMoveCode(loc) != Piece.NOT_POSSIBLE_MOVE) {
-				possibleMoves.add(loc);
+		for(int condition : conditions) {
+			if(p.getMoveCode(loc) == condition) {
+				moves.add(loc);
+				break;
 			}
 		}
-		
-		return toArray(possibleMoves);
-	}
-	
-	public static Location[] toArray(ArrayList<Location> locList) {
-		Location[] out = new Location[locList.size()];
-		for(int i = 0; i < locList.size(); i++) {
-			out[i] = locList.get(i);
-		}
-		
-		return out;
+			
+		return moves;
 	}
 	
 	public static ArrayList<Location> getMoves(int x, int y, int x_operator, int y_operator, Piece p){
@@ -109,7 +90,7 @@ public class Movement {
 			case Piece.POSSIBLE_MOVE:
 				out.add(current);
 				break;
-			case Piece.LAST_MOVE:
+			case Piece.CAN_HIT:
 				out.add(current);
 				canContinue = false;
 				break;

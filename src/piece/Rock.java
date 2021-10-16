@@ -16,8 +16,8 @@ public class Rock extends Piece{
 	}
 	
 	@Override
-	public Location[] getPossibleMoves() {
-		return Movement.getHorizontalMoves(this);
+	public void updatePossibleMoves() {
+		super.possibleMoves = Movement.getStraightMoves(this);
 	}
 	
 	

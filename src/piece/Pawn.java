@@ -1,5 +1,7 @@
 package piece;
 
+import java.util.ArrayList;
+
 import javax.swing.ImageIcon;
 
 import main.Location;
@@ -13,7 +15,7 @@ public class Pawn extends Piece{
 	
 	public Pawn(int color, Location loc) {		
 		super("Bauer", color, loc, color == 0 ? main.pawn_white_img : main.pawn_black_img, 1);
-		direction = color == 0 ? 1 : -1;
+		direction = color == 0 ? -1 : 1;
 	}
 	
 	public int getDirection() {
@@ -21,8 +23,8 @@ public class Pawn extends Piece{
 	}
 	
 	@Override
-	public Location[] getPossibleMoves() {
-		return Movement.getPawnMoves(this);
+	public void updatePossibleMoves() {
+		super.possibleMoves = Movement.getPawnMoves(this);
 	}
 
 }

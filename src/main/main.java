@@ -31,11 +31,12 @@ public class main {
 			{{ROCK, KNIGHT, BISHOP, QUEEN, KING, BISHOP, KNIGHT, ROCK},
 			{PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN},
 			{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
+			{EMPTY, EMPTY, EMPTY, QUEEN, EMPTY, EMPTY, EMPTY, EMPTY},
 			{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
 			{EMPTY, EMPTY, EMPTY, PAWN, EMPTY, EMPTY, EMPTY, EMPTY},
-			{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
 			{PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN},
 			{ROCK, KNIGHT, BISHOP, QUEEN, KING, BISHOP, KNIGHT, ROCK}};
+	public static Piece lastSelected = null;
 	
 	
 	public static void main(String[] args) {
@@ -45,10 +46,16 @@ public class main {
 		createFields(); //Felder werden erstellt
 		putPieces();
 		
-		g.complete(); //JFrame wird sichtbar gemacht
+		updatePieceMoves();
 		
+		g.complete(); //JFrame wird sichtbar gemacht	
 		
-		
+	}
+	
+	public static void updatePieceMoves() {
+		for(Piece p : Piece.all) {
+			p.updatePossibleMoves();
+		}
 	}
 	
 	private static void createFields() {
@@ -58,7 +65,7 @@ public class main {
 			for(int x = 0; x < COLS; x++) {
 				//Ordnung im 2d array durch diese Schleifen
 				allFields2D[y][x] = new Field(new Location(x, y));
-				allFields[y * ROWS + x] = allFields2D[x][y];
+				allFields[y * ROWS + x] = allFields2D[y][x]; //DAVOR zuerst x und dann y
 			}
 		}
 	}
@@ -72,7 +79,7 @@ public class main {
 				if(piece != null) {
 					try {
 						Constructor con = piece.getConstructor(int.class, Location.class);
-						Object xyz = con.newInstance(color, new Location(y, x));
+						Object xyz = con.newInstance(color, new Location(x, y));
 					} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 						e.printStackTrace();
 					}

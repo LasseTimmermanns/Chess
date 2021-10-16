@@ -7,6 +7,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -15,6 +16,7 @@ import javax.swing.JLabel;
 import main.Location;
 import main.imageloader;
 import main.main;
+import main.util;
 import piece.Piece;
 
 public class Field extends JLabel{
@@ -55,7 +57,7 @@ public class Field extends JLabel{
 	}
 	
 	public static Field getFieldByLocation(Location loc) {
-		return main.allFields2D[loc.X][loc.Y];
+		return main.allFields2D[loc.Y][loc.X];
 	}
 	
 	protected void paintChildren(Graphics g) {
@@ -73,37 +75,48 @@ public class Field extends JLabel{
 		return new MouseListener() {
 			
 			@Override
+			public void mousePressed(MouseEvent e) {
+				
+				//Feld leeren
+				for(Field f : getMarked()) {
+					f.mark();	//Alle gemarkten werden unmarked
+				}
+				
+				if(isOccupied()) {					
+					Piece selected = getCurrentPiece();
+					
+					if(!selected.movesAreMarked()) {
+						selected.markMoves();
+					}
+					
+					if(main.lastSelected != null) main.lastSelected.setMovesAreMarked(false);
+					
+					main.lastSelected = selected;
+				}
+				
+				
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
 			public void mouseReleased(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
-			
-			@Override
-			public void mousePressed(MouseEvent e) {
-				System.out.println(position.toString());
-				
-				if(isOccupied()) {
-					for(Location l : getCurrentPiece().getPossibleMoves()) {
-						System.out.println(l.toString());
-						l.getField().mark();
-					}
-				}
-			}
-			
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
+
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
-			
+
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseExited(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
@@ -144,6 +157,17 @@ public class Field extends JLabel{
 				f.resizeIcon();
 			}
 		}
+	}
+	
+	public static Field[] getMarked() {
+		ArrayList<Field> all = new ArrayList<Field>();
+		for(Field f : main.allFields) {
+			if(f.isMarked()) {
+				all.add(f);
+			}
+		}
+		
+		return util.fieldListToArray(all);
 	}
 	
 	public Color getFieldColor() {
