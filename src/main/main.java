@@ -25,17 +25,16 @@ public class main {
 	public static Field[] allFields = new Field[ROWS * COLS];
 	public static ImageIcon pawn_white_img, knight_white_img, bishop_white_img, rock_white_img, queen_white_img, king_white_img;
 	public static ImageIcon pawn_black_img, knight_black_img, bishop_black_img, rock_black_img, queen_black_img, king_black_img;
-	public static final Class PAWN = Pawn.class, KNIGHT = Knight.class, BISHOP = 
-			Bishop.class, ROCK = Rock.class, QUEEN = Queen.class, KING = King.class, EMPTY = null;
+	
 	public static final Class[][] START_BOARD = 
-			{{ROCK, KNIGHT, BISHOP, KING, QUEEN, BISHOP, KNIGHT, ROCK},
-			{PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN},
-			{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-			{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-			{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-			{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
-			{PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN},
-			{ROCK, KNIGHT, BISHOP, KING, QUEEN, BISHOP, KNIGHT, ROCK}};
+			{{Piece.ROCK, Piece.KNIGHT, Piece.BISHOP, Piece.KING, Piece.QUEEN, Piece.BISHOP, Piece.KNIGHT, Piece.ROCK},
+			{Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN},
+			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
+			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
+			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
+			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
+			{Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN},
+			{Piece.ROCK, Piece.KNIGHT, Piece.BISHOP, Piece.KING, Piece.QUEEN, Piece.BISHOP, Piece.KNIGHT, Piece.ROCK}};
 	public static Piece lastSelected = null;
 	public static final int COLOR_WHITE = 0, COLOR_BLACK = 1, COLOR_WHITE_DIRECTION = 1, COLOR_BLACK_DIRECTION = -1;
 	public static int colorCanMove = COLOR_BLACK;
@@ -55,7 +54,8 @@ public class main {
 	}
 	
 	public static void nextMove() {
-		colorCanMove = colorCanMove == COLOR_WHITE ? COLOR_BLACK : COLOR_WHITE;
+		//colorCanMove = colorCanMove == COLOR_WHITE ? COLOR_BLACK : COLOR_WHITE;
+		colorCanMove = COLOR_WHITE;
 		
 		updatePieceCoverings();
 		updatePieceMoves();

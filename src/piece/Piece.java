@@ -13,10 +13,13 @@ import main.main;
 public class Piece {
 	
 	public static final int NULL = -1, NOT_POSSIBLE_MOVE = 0, POSSIBLE_MOVE = 1, CAN_HIT = 2, IS_COVERING = 3;
+	public static final Class PAWN = Pawn.class, KNIGHT = Knight.class, BISHOP = 
+			Bishop.class, ROCK = Rock.class, QUEEN = Queen.class, KING = King.class, EMPTY = null;
 	public static ArrayList<Piece> all = new ArrayList<Piece>();
 	private ImageIcon icon;
 	private String name;
 	private Location location;
+	private Field field;
 	protected ArrayList<Location> coverings = new ArrayList<Location>(), possibleMoves = new ArrayList<Location>();
 	private int value, color;
 	private boolean movesAreMarked, alreadyMoved;
@@ -30,9 +33,10 @@ public class Piece {
 		this.value = value;
 		this.movesAreMarked = false;
 		this.alreadyMoved = false;
+		this.field = Field.getFieldByLocation(loc);
 		
 		
-		Field.getFieldByLocation(loc).setPiece(this);
+		field.setPiece(this);
 		all.add(this);
 	}
 	
@@ -51,8 +55,9 @@ public class Piece {
 	
 	public void move(Field newLoc) {
 		alreadyMoved = true;
-		Field.getFieldByLocation(location).removePiece();
+		field.removePiece();
 		
+		field = newLoc;
 		location = newLoc.getPosition();
 		
 		newLoc.setPiece(this);

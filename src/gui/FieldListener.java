@@ -3,8 +3,10 @@ package gui;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import main.Location;
 import main.main;
 import piece.Piece;
+import piece.Rock;
 
 public class FieldListener implements MouseListener{
 
@@ -19,7 +21,29 @@ public class FieldListener implements MouseListener{
 		
 		//Feld leeren
 		if(field.isMarked() && main.lastSelected != null) {
-			main.lastSelected.move(field);
+			//Rochade
+			Piece p = main.lastSelected;
+			if(p.getClass() == Piece.KING) {
+				int differenz = p.getLocation().X - field.getPosition().X;
+				if(Math.abs(differenz) == 2) {
+					for(Rock r : Rock.getAll()) {
+						if(r.getColor() != p.getColor()) continue;
+						
+						//Linke Rochade
+						if(r.getSide() == -1 && differenz == 2) {
+							 r.move(Field.getFieldByLocation(new Location(p.getLocation().X - 1, p.getLocation().Y)));
+						}
+						
+						//Rechte Rochade
+						if(r.getSide() == 1 && differenz == -2) {
+							 r.move(Field.getFieldByLocation(new Location(p.getLocation().X + 1, p.getLocation().Y)));
+						}
+					}
+					
+				}
+			}
+			
+			p.move(field);
 			main.nextMove();
 		}
 		

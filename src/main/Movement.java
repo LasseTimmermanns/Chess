@@ -7,6 +7,7 @@ import piece.King;
 import piece.Knight;
 import piece.Pawn;
 import piece.Piece;
+import piece.Rock;
 
 public class Movement {
 
@@ -71,6 +72,36 @@ public class Movement {
 	public static ArrayList<Location> getKingMoves(King k, boolean cover) {
 		ArrayList<Location> out = new ArrayList<Location>();
 		Location start = k.getLocation();
+		
+		//Rochade
+		if(!cover && !k.isAlreadyMoved()) {
+			//König und Turm dürfen noch nicht bewegt worden sein, zwischen Turm und König keine Figuren
+			
+			//Links
+			for(Rock r : Rock.getAll()) {
+				if(r.isAlreadyMoved()) continue;
+				if(r.getColor() != k.getColor()) continue;
+				
+				Location loc = k.getLocation();
+				boolean obstructed = false;
+				while(loc.isInBoard() && !obstructed) {
+					loc = new Location(loc.X + r.getSide(), loc.Y);
+					
+					Field f = Field.getFieldByLocation(loc);
+					if(f.isOccupied()) {
+						if(f.getCurrentPiece() == r) break;
+						obstructed = true;
+					}
+				}
+				
+				if(!obstructed) {
+					Location loc2 = new Location(k.getLocation().X + (r.getSide() * 2), k.getLocation().Y);
+					out.add(loc2);
+				}
+				
+			}
+			
+		}
 		
 		for(int x = -1; x <= 1; x++) {
 			for(int y = -1; y <= 1; y++) {
