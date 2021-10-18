@@ -27,17 +27,18 @@ public class main {
 	public static ImageIcon pawn_black_img, knight_black_img, bishop_black_img, rock_black_img, queen_black_img, king_black_img;
 	public static final Class PAWN = Pawn.class, KNIGHT = Knight.class, BISHOP = 
 			Bishop.class, ROCK = Rock.class, QUEEN = Queen.class, KING = King.class, EMPTY = null;
-	public static final Class[][] PIECES_ON_BOARD = 
-			{{ROCK, KNIGHT, BISHOP, QUEEN, KING, BISHOP, KNIGHT, ROCK},
+	public static final Class[][] START_BOARD = 
+			{{ROCK, KNIGHT, BISHOP, KING, QUEEN, BISHOP, KNIGHT, ROCK},
 			{PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN},
 			{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
 			{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
 			{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
 			{EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
 			{PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN},
-			{ROCK, KNIGHT, BISHOP, QUEEN, KING, BISHOP, KNIGHT, ROCK}};
+			{ROCK, KNIGHT, BISHOP, KING, QUEEN, BISHOP, KNIGHT, ROCK}};
 	public static Piece lastSelected = null;
-	public static final int COLOR_WHITE = 0, COLOR_BLACK = 1;
+	public static final int COLOR_WHITE = 0, COLOR_BLACK = 1, COLOR_WHITE_DIRECTION = 1, COLOR_BLACK_DIRECTION = -1;
+	public static int colorCanMove = COLOR_BLACK;
 	
 	
 	public static void main(String[] args) {
@@ -49,14 +50,21 @@ public class main {
 		
 		g.complete(); //JFrame wird sichtbar gemacht
 		
-		updatePieceCoverings();
-		updateFieldCoverings();
-		updatePieceMoves();
+		nextMove();
 		
 	}
 	
-	public static void updateFieldCoverings() {
+	public static void nextMove() {
+		colorCanMove = colorCanMove == COLOR_WHITE ? COLOR_BLACK : COLOR_WHITE;
+		
+		updatePieceCoverings();
+		updatePieceMoves();
+	}
+	
+	public static void updatePieceCoverings() {
 		for(Piece p : Piece.all) {
+			if(p.getColor() == colorCanMove) continue;
+			p.updateCoverings();
 			if(p.getCoverings() == null) continue;
 			for(Location loc : p.getCoverings()) {
 				loc.getField().setCoveredBy(p.getColor(), true);
@@ -66,13 +74,11 @@ public class main {
 	
 	public static void updatePieceMoves() {
 		for(Piece p : Piece.all) {
+			if(p.getColor() != colorCanMove) {
+				p.clearPossibleMoves();
+				continue;
+			}
 			p.updatePossibleMoves();
-		}
-	}
-	
-	public static void updatePieceCoverings() {
-		for(Piece p : Piece.all) {
-			p.updateCoverings();
 		}
 	}
 	
@@ -91,8 +97,8 @@ public class main {
 	private static void putPieces() {
 		for(int y = 7; y >= 0; y--) {
 			for(int x = 0; x < COLS; x++) {
-				int color = y < (COLS / 2) ? COLOR_BLACK : COLOR_WHITE;
-				Class piece = PIECES_ON_BOARD[7- y][7- x];				
+				int color = y < (COLS / 2) ? COLOR_WHITE : COLOR_BLACK;
+				Class piece = START_BOARD[7- y][7- x];				
 				
 				if(piece != null) {
 					try {

@@ -17,7 +17,7 @@ public class Piece {
 	private ImageIcon icon;
 	private String name;
 	private Location location;
-	protected ArrayList<Location> coverings, possibleMoves;
+	protected ArrayList<Location> coverings = new ArrayList<Location>(), possibleMoves = new ArrayList<Location>();
 	private int value, color;
 	private boolean movesAreMarked, alreadyMoved;
 	
@@ -30,8 +30,9 @@ public class Piece {
 		this.value = value;
 		this.movesAreMarked = false;
 		this.alreadyMoved = false;
-
-		Field.getFieldByLocation(loc).movePieceHere(this);
+		
+		
+		Field.getFieldByLocation(loc).setPiece(this);
 		all.add(this);
 	}
 	
@@ -48,6 +49,16 @@ public class Piece {
 	
 	}
 	
+	public void move(Field newLoc) {
+		alreadyMoved = true;
+		Field.getFieldByLocation(location).removePiece();
+		
+		location = newLoc.getPosition();
+		
+		newLoc.setPiece(this);
+		
+	}
+	
 	public boolean isAlreadyMoved() {
 		return alreadyMoved;
 	}
@@ -61,6 +72,10 @@ public class Piece {
 	}
 	
 	public void updatePossibleMoves() {}
+	
+	public void clearPossibleMoves() {
+		possibleMoves.clear();
+	}
 	
 	public ArrayList<Location> getCoverings() {
 		return coverings;

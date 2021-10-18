@@ -24,15 +24,14 @@ public class Field extends JLabel{
 	private Color fieldColor;
 	private boolean marked = false;
 	private Field obj;
-	private Location position;
+	private Location location;
 	private Piece currentPiece;
-	private long newestResize;
 	private boolean[] coveredBy;
 	
 	
 	public Field(Location loc) {
 		//Eigenschaften
-		this.position = loc;
+		this.location = loc;
 		this.obj = this;
 		this.fieldColor = main.getFieldColor(loc.X + loc.Y);
 		this.coveredBy = new boolean[]{false, false};
@@ -43,7 +42,7 @@ public class Field extends JLabel{
 		setBorder(BorderFactory.createLineBorder(gui.FIELD_BORDER, 3, false));
 		gui.board.add(this);		
 		
-		addMouseListener(listen());
+		addMouseListener(new FieldListener(this));
 
 		addComponentListener(onResize());
 		
@@ -73,59 +72,6 @@ public class Field extends JLabel{
 		
 	}
 	
-	private MouseListener listen() {
-		return new MouseListener() {
-			
-			@Override
-			public void mousePressed(MouseEvent e) {
-				
-				//Feld leeren
-				for(Field f : getMarked()) {
-					f.mark();	//Alle gemarkten werden unmarked
-				}
-				
-				if(isOccupied()) {					
-					Piece selected = getCurrentPiece();
-					
-					if(!selected.movesAreMarked()) {
-						selected.markMoves();
-					}
-					
-					if(main.lastSelected != null) main.lastSelected.setMovesAreMarked(false);
-					
-					main.lastSelected = selected;
-				}
-				
-				
-			}
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		};
-		
-	}
-	
 	private ComponentAdapter onResize() {
 		return new ComponentAdapter() {
 			
@@ -139,8 +85,12 @@ public class Field extends JLabel{
 		
 	}
 	
+	public void removePiece() {
+		currentPiece = null;
+		setIcon(null);
+	}
 	
-	public void movePieceHere(Piece p) {
+	public void setPiece(Piece p) {
 		currentPiece = p;
 		
 		setIcon(p.getIcon());
@@ -195,4 +145,9 @@ public class Field extends JLabel{
 	public void setCoveredBy(int color, boolean value) {
 		coveredBy[color] = value;
 	}
+	
+	public Location getPosition() {
+		return location;
+	}
+	
 }
