@@ -2,14 +2,9 @@ package piece;
 
 import java.util.ArrayList;
 
-import javax.swing.ImageIcon;
-
-import com.sun.tools.javac.util.ArrayUtils;
-
 import main.Location;
 import main.Movement;
 import main.main;
-import main.util;
 
 public class Queen extends Piece{
 

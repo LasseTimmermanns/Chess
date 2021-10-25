@@ -1,19 +1,16 @@
 package piece;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
 import gui.Field;
 import main.Location;
-import main.Move;
-import main.main;
 
 public class Piece {
 	
 	public static final int NULL = -1, NOT_POSSIBLE_MOVE = 0, POSSIBLE_MOVE = 1, CAN_HIT = 2, IS_COVERING = 3;
-	public static final Class PAWN = Pawn.class, KNIGHT = Knight.class, BISHOP = 
+	public static final Class<?> PAWN = Pawn.class, KNIGHT = Knight.class, BISHOP = 
 			Bishop.class, ROCK = Rock.class, QUEEN = Queen.class, KING = King.class, EMPTY = null;
 	public static ArrayList<Piece> all = new ArrayList<Piece>();
 	private ImageIcon icon;

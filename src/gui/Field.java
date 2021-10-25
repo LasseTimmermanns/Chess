@@ -1,12 +1,9 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -14,7 +11,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 import main.Location;
-import main.imageloader;
 import main.main;
 import main.util;
 import piece.Piece;
@@ -23,7 +19,6 @@ public class Field extends JLabel{
 
 	private Color fieldColor;
 	private boolean marked = false;
-	private Field obj;
 	private Location location;
 	private Piece currentPiece;
 	private boolean[] coveredBy;
@@ -32,7 +27,6 @@ public class Field extends JLabel{
 	public Field(Location loc) {
 		//Eigenschaften
 		this.location = loc;
-		this.obj = this;
 		this.fieldColor = main.getFieldColor(loc.X + loc.Y);
 		this.coveredBy = new boolean[]{false, false};
 		

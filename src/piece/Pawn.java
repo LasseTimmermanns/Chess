@@ -1,13 +1,8 @@
 package piece;
 
-import java.util.ArrayList;
-
-import javax.swing.ImageIcon;
-
 import main.Location;
 import main.Movement;
 import main.main;
-import main.util;
 
 public class Pawn extends Piece{
 

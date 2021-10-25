@@ -23,6 +23,10 @@ public class FieldListener implements MouseListener{
 		if(field.isMarked() && main.lastSelected != null) {
 			//Rochade
 			Piece p = main.lastSelected;
+			Location start = p.getLocation();
+			Location end = field.getPosition();
+			
+			//Rochade
 			if(p.getClass() == Piece.KING) {
 				int differenz = p.getLocation().X - field.getPosition().X;
 				if(Math.abs(differenz) == 2) {
@@ -44,10 +48,10 @@ public class FieldListener implements MouseListener{
 			}
 			
 			p.move(field);
-			main.nextMove();
+			main.nextMove(p, start, end, false);
 		}
 		
-		for(Field f : field.getMarked()) {
+		for(Field f : Field.getMarked()) {
 			f.mark();	//Alle gemarkten werden unmarked
 		}
 		

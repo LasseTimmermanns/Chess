@@ -44,10 +44,11 @@ public class Movement {
 	//cover true, wenn auch Felder ausgegeben werden sollen, welche die Figur deckt
 	public static ArrayList<Location> getPawnMoves(Pawn p, boolean cover) {
 		ArrayList<Location> out = new ArrayList<Location>();
-			
+		Location pawnLoc = p.getLocation();
+		
 		//Zuege nach vorne, nach links und nach rechts
-		Location forward = new Location(p.getLocation().X, p.getLocation().Y + p.getDirection()),
-				doubleForward = new Location(p.getLocation().X, p.getLocation().Y + (2 * p.getDirection())),
+		Location forward = new Location(pawnLoc.X, pawnLoc.Y + p.getDirection()),
+				doubleForward = new Location(pawnLoc.X, pawnLoc.Y + (2 * p.getDirection())),
 				diagonalLeft = new Location(forward.X - 1, forward.Y),
 				diagonalRight = new Location(forward.X + 1, forward.Y);
 		
@@ -55,6 +56,19 @@ public class Movement {
 			if(diagonalLeft.isInBoard()) out.add(diagonalLeft);
 			if(diagonalRight.isInBoard()) out.add(diagonalRight);
 			return out;
+		}
+
+		//TODO: En passant 
+		if(p.getDirection() == -1 && pawnLoc.Y == 3 || p.getDirection() == 1 && pawnLoc.Y == 4) {
+			if((Move.latest.getPiece().getClass() == Piece.PAWN) && (Move.latest.getPiece().getColor() != p.getColor())) {
+				int x = Move.latest.getEnd().X;
+				if((x == pawnLoc.X - 1 || x == pawnLoc.X + 1) && (Math.abs(Move.latest.getStart().Y - Move.latest.getEnd().Y) == 2)) {
+					Location en_passant = new Location(Move.latest.getStart().X, Move.latest.getStart().Y  + ((Pawn) Move.latest.getPiece()).getDirection());
+					if(en_passant.isInBoard()) {
+						out.add(en_passant);
+					}
+				}
+			}
 		}
 		
 		out = addLocationWhenCondition(p, forward, new int[]{Piece.POSSIBLE_MOVE}, out);

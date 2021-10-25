@@ -1,22 +1,14 @@
 package main;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 
 import gui.Field;
 import gui.gui;
-import piece.Bishop;
-import piece.King;
-import piece.Knight;
-import piece.Pawn;
 import piece.Piece;
-import piece.Queen;
-import piece.Rock;
 
 public class main {
 
@@ -26,7 +18,7 @@ public class main {
 	public static ImageIcon pawn_white_img, knight_white_img, bishop_white_img, rock_white_img, queen_white_img, king_white_img;
 	public static ImageIcon pawn_black_img, knight_black_img, bishop_black_img, rock_black_img, queen_black_img, king_black_img;
 	
-	public static final Class[][] START_BOARD = 
+	public static final Class<?>[][] START_BOARD = 
 			{{Piece.ROCK, Piece.KNIGHT, Piece.BISHOP, Piece.KING, Piece.QUEEN, Piece.BISHOP, Piece.KNIGHT, Piece.ROCK},
 			{Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN},
 			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
@@ -49,13 +41,17 @@ public class main {
 		
 		g.complete(); //JFrame wird sichtbar gemacht
 		
-		nextMove();
+		nextMove(null, null, null, true);
 		
 	}
 	
-	public static void nextMove() {
-		//colorCanMove = colorCanMove == COLOR_WHITE ? COLOR_BLACK : COLOR_WHITE;
-		colorCanMove = COLOR_WHITE;
+	public static void nextMove(Piece p, Location start, Location end, boolean firstMove) {
+		colorCanMove = colorCanMove == COLOR_WHITE ? COLOR_BLACK : COLOR_WHITE;
+		//colorCanMove = COLOR_WHITE;
+		
+		if(!firstMove) {
+			new Move(p, start, end, true);	
+		}
 		
 		updatePieceCoverings();
 		updatePieceMoves();
@@ -98,12 +94,12 @@ public class main {
 		for(int y = 7; y >= 0; y--) {
 			for(int x = 0; x < COLS; x++) {
 				int color = y < (COLS / 2) ? COLOR_WHITE : COLOR_BLACK;
-				Class piece = START_BOARD[7- y][7- x];				
+				Class<?> piece = START_BOARD[7- y][7- x];				
 				
 				if(piece != null) {
 					try {
-						Constructor con = piece.getConstructor(int.class, Location.class);
-						Object xyz = con.newInstance(color, new Location(x, y));
+						Constructor<?> con = piece.getConstructor(int.class, Location.class);
+						con.newInstance(color, new Location(x, y));
 					} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 						e.printStackTrace();
 					}

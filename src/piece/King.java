@@ -1,7 +1,5 @@
 package piece;
 
-import javax.swing.ImageIcon;
-
 import main.Location;
 import main.Movement;
 import main.main;

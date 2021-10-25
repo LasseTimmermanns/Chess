@@ -2,10 +2,7 @@ package piece;
 
 import java.util.ArrayList;
 
-import javax.swing.ImageIcon;
-
 import main.Location;
-import main.Move;
 import main.Movement;
 import main.main;
 
