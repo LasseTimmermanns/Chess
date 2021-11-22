@@ -1,6 +1,7 @@
-package main;
+package Movement;
 
-import gui.Field;
+import Gui.Field;
+import Main.main;
 
 public class Location {
 

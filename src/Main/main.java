@@ -1,4 +1,4 @@
-package main;
+package Main;
 
 import java.awt.Color;
 import java.lang.reflect.Constructor;
@@ -6,9 +6,11 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.ImageIcon;
 
-import gui.Field;
-import gui.gui;
-import piece.Piece;
+import Gui.Field;
+import Gui.gui;
+import Movement.Location;
+import Movement.Move;
+import Piece.Piece;
 
 public class main {
 
@@ -19,14 +21,14 @@ public class main {
 	public static ImageIcon pawn_black_img, knight_black_img, bishop_black_img, rock_black_img, queen_black_img, king_black_img;
 	
 	public static final Class<?>[][] START_BOARD = 
-			{{Piece.ROCK, Piece.KNIGHT, Piece.BISHOP, Piece.KING, Piece.QUEEN, Piece.BISHOP, Piece.KNIGHT, Piece.ROCK},
+			{{Piece.EMPTY, Piece.KNIGHT, Piece.BISHOP, Piece.KING, Piece.QUEEN, Piece.BISHOP, Piece.KNIGHT, Piece.EMPTY},
 			{Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN},
 			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
-			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
+			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.ROOK, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
 			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
 			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
 			{Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN},
-			{Piece.ROCK, Piece.KNIGHT, Piece.BISHOP, Piece.KING, Piece.QUEEN, Piece.BISHOP, Piece.KNIGHT, Piece.ROCK}};
+			{Piece.EMPTY, Piece.KNIGHT, Piece.BISHOP, Piece.KING, Piece.QUEEN, Piece.BISHOP, Piece.KNIGHT, Piece.EMPTY}};
 	public static Piece lastSelected = null;
 	public static final int COLOR_WHITE = 0, COLOR_BLACK = 1, COLOR_WHITE_DIRECTION = 1, COLOR_BLACK_DIRECTION = -1;
 	public static int colorCanMove = COLOR_BLACK;
@@ -41,17 +43,25 @@ public class main {
 		
 		g.complete(); //JFrame wird sichtbar gemacht
 		
-		nextMove(null, null, null, true);
+		updatePieceCoverings();
+		updatePieceMoves();
 		
 	}
 	
-	public static void nextMove(Piece p, Location start, Location end, boolean firstMove) {
+	public static void nextMove(Piece p, Location end, boolean firstMove) {
+		if(firstMove) {
+			nextMove(null, firstMove);
+			return;
+		}
+		
+		
+	}
+	
+	public static void nextMove(Move move, boolean firstMove) {
 		colorCanMove = colorCanMove == COLOR_WHITE ? COLOR_BLACK : COLOR_WHITE;
 		//colorCanMove = COLOR_WHITE;
 		
-		if(!firstMove) {
-			new Move(p, start, end, true);	
-		}
+		move.setPlayed();
 		
 		updatePieceCoverings();
 		updatePieceMoves();
@@ -59,11 +69,10 @@ public class main {
 	
 	public static void updatePieceCoverings() {
 		for(Piece p : Piece.all) {
-			if(p.getColor() == colorCanMove) continue;
 			p.updateCoverings();
 			if(p.getCoverings() == null) continue;
-			for(Location loc : p.getCoverings()) {
-				loc.getField().setCoveredBy(p.getColor(), true);
+			for(Move move : p.getCoverings()) {
+				move.getEnd().getField().setCoveredBy(p.getColor(), true);
 			}
 		}
 	}
@@ -84,6 +93,7 @@ public class main {
 		for(int y = ROWS - 1; y >= 0; y--) {
 			for(int x = 0; x < COLS; x++) {
 				//Ordnung im 2d array durch diese Schleifen
+				
 				allFields2D[y][x] = new Field(new Location(x, y));
 				allFields[y * ROWS + x] = allFields2D[y][x]; //DAVOR zuerst x und dann y
 			}

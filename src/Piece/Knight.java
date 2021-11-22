@@ -1,8 +1,8 @@
-package piece;
+package Piece;
 
-import main.Location;
-import main.Movement;
-import main.main;
+import Main.main;
+import Movement.Location;
+import Movement.Movegenerator;
 
 public class Knight extends Piece{
 
@@ -12,12 +12,12 @@ public class Knight extends Piece{
 	
 	@Override
 	public void updateCoverings() {
-		super.coverings = Movement.getKnightMoves(this, true);
+		super.coverings = Movegenerator.getKnightMoves(this, true);
 	}
 	
 	@Override
 	public void updatePossibleMoves() {
-		super.possibleMoves = Movement.getKnightMoves(this, false);
+		super.possibleMoves = Movegenerator.getKnightMoves(this, false);
 	}
 	
 

@@ -1,8 +1,11 @@
-package main;
+package Main;
 
 import java.util.ArrayList;
 
-import gui.Field;
+import Gui.Field;
+import Movement.Location;
+import Movement.Move;
+import Piece.Piece;
 
 public class util {
 
@@ -37,6 +40,16 @@ public class util {
 		}
 		
 		return out;
+	}
+	
+	//Funktion findet den passenden Move zu Figur und neuer Position
+	public static Move findMove(Piece p, Location end) {
+		for(Move m : p.getPossibleMoves()) {
+			if((m.getEnd().X == end.X) && (m.getEnd().Y == end.Y)) return m;
+		}
+		
+		System.out.println("findmoves == null");
+		return null;
 	}
 	
 }

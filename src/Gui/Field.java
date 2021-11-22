@@ -1,4 +1,4 @@
-package gui;
+package Gui;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -10,10 +10,10 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-import main.Location;
-import main.main;
-import main.util;
-import piece.Piece;
+import Main.main;
+import Main.util;
+import Movement.Location;
+import Piece.Piece;
 
 public class Field extends JLabel{
 
@@ -63,6 +63,7 @@ public class Field extends JLabel{
 		int s = getWidth();
 		g.setColor(c);
 		g.fillOval(s / 3, s / 3, s / 3, s / 3);
+		//g.fillOval(s/ 4 + s / 12, s / 4 + s / 12, s / 4, s / 4);
 		
 	}
 	

@@ -1,8 +1,8 @@
-package piece;
+package Piece;
 
-import main.Location;
-import main.Movement;
-import main.main;
+import Main.main;
+import Movement.Location;
+import Movement.Movegenerator;
 
 public class Pawn extends Piece{
 
@@ -19,12 +19,12 @@ public class Pawn extends Piece{
 	
 	@Override
 	public void updateCoverings() {
-		super.coverings = Movement.getPawnMoves(this, true);
+		super.coverings = Movegenerator.getPawnMoves(this, true);
 	}
 	
 	@Override
 	public void updatePossibleMoves() {
-		super.possibleMoves = Movement.getPawnMoves(this, false);
+		super.possibleMoves = Movegenerator.getPawnMoves(this, false);
 	}
 
 }

@@ -1,23 +1,24 @@
-package piece;
+package Piece;
 
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
-import gui.Field;
-import main.Location;
+import Gui.Field;
+import Movement.Location;
+import Movement.Move;
 
 public class Piece {
 	
 	public static final int NULL = -1, NOT_POSSIBLE_MOVE = 0, POSSIBLE_MOVE = 1, CAN_HIT = 2, IS_COVERING = 3;
 	public static final Class<?> PAWN = Pawn.class, KNIGHT = Knight.class, BISHOP = 
-			Bishop.class, ROCK = Rock.class, QUEEN = Queen.class, KING = King.class, EMPTY = null;
+			Bishop.class, ROOK = Rook.class, QUEEN = Queen.class, KING = King.class, EMPTY = null;
 	public static ArrayList<Piece> all = new ArrayList<Piece>();
 	private ImageIcon icon;
 	private String name;
 	private Location location;
 	private Field field;
-	protected ArrayList<Location> coverings = new ArrayList<Location>(), possibleMoves = new ArrayList<Location>();
+	protected ArrayList<Move> coverings = new ArrayList<Move>(), possibleMoves = new ArrayList<Move>();
 	private int value, color;
 	private boolean movesAreMarked, alreadyMoved;
 	
@@ -69,7 +70,7 @@ public class Piece {
 		this.alreadyMoved = true;
 	}
 	
-	public ArrayList<Location> getPossibleMoves() {
+	public ArrayList<Move> getPossibleMoves() {
 		return possibleMoves;
 	}
 	
@@ -79,7 +80,7 @@ public class Piece {
 		possibleMoves.clear();
 	}
 	
-	public ArrayList<Location> getCoverings() {
+	public ArrayList<Move> getCoverings() {
 		return coverings;
 	}
 	
@@ -114,8 +115,8 @@ public class Piece {
 	}
 	
 	public void markMoves() {
-		for(Location l : this.getPossibleMoves()) {
-			l.getField().mark();
+		for(Move m : this.getPossibleMoves()) {
+			m.getEnd().getField().mark();
 		}
 		
 		this.movesAreMarked = !movesAreMarked;

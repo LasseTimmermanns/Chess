@@ -1,8 +1,8 @@
-package piece;
+package Piece;
 
-import main.Location;
-import main.Movement;
-import main.main;
+import Main.main;
+import Movement.Location;
+import Movement.Movegenerator;
 
 public class Bishop extends Piece{
 
@@ -12,11 +12,11 @@ public class Bishop extends Piece{
 	
 	@Override
 	public void updateCoverings(){
-		super.coverings = Movement.getDiagonalMoves(this, true);
+		super.coverings = Movegenerator.getDiagonalMoves(this, true);
 	}
 	
 	@Override
 	public void updatePossibleMoves(){
-		super.possibleMoves = Movement.getDiagonalMoves(this, false);
+		super.possibleMoves = Movegenerator.getDiagonalMoves(this, false);
 	}
 }

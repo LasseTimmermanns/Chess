@@ -1,12 +1,13 @@
-package gui;
+package Gui;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import main.Location;
-import main.main;
-import piece.Piece;
-import piece.Rock;
+import Main.main;
+import Main.util;
+import Movement.Location;
+import Piece.Piece;
+import Piece.Rook;
 
 public class FieldListener implements MouseListener{
 
@@ -19,18 +20,18 @@ public class FieldListener implements MouseListener{
 	@Override
 	public void mousePressed(MouseEvent e) {
 		
+		
 		//Feld leeren
 		if(field.isMarked() && main.lastSelected != null) {
 			//Rochade
 			Piece p = main.lastSelected;
-			Location start = p.getLocation();
 			Location end = field.getPosition();
 			
 			//Rochade
 			if(p.getClass() == Piece.KING) {
 				int differenz = p.getLocation().X - field.getPosition().X;
 				if(Math.abs(differenz) == 2) {
-					for(Rock r : Rock.getAll()) {
+					for(Rook r : Rook.getAll()) {
 						if(r.getColor() != p.getColor()) continue;
 						
 						//Linke Rochade
@@ -47,15 +48,16 @@ public class FieldListener implements MouseListener{
 				}
 			}
 			
+			//Move wird durchgeführt
 			p.move(field);
-			main.nextMove(p, start, end, false);
+			main.nextMove(util.findMove(p, end), false);
 		}
 		
 		for(Field f : Field.getMarked()) {
 			f.mark();	//Alle gemarkten werden unmarked
 		}
 		
-		if(field.isOccupied()) {					
+		if(field.isOccupied()) {				
 			Piece selected = field.getCurrentPiece();
 			
 			if(!selected.movesAreMarked()) {
@@ -63,6 +65,7 @@ public class FieldListener implements MouseListener{
 			}
 			
 			if(main.lastSelected != null) main.lastSelected.setMovesAreMarked(false);
+			
 			
 			main.lastSelected = selected;
 		}		
