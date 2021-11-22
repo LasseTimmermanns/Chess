@@ -26,24 +26,22 @@ public class Field extends JLabel{
 	
 	public Field(Location loc) {
 		//Eigenschaften
-		this.location = loc;
-		this.fieldColor = main.getFieldColor(loc.X + loc.Y);
-		this.coveredBy = new boolean[]{false, false};
+		this.location = loc; //Location
+		this.fieldColor = main.getFieldColor(loc.X + loc.Y); //Feldfarbe
+		this.coveredBy = new boolean[]{false, false}; //Welche Farben das Feld decken
 		
 		setOpaque(true);
 		setBackground(fieldColor);
-		setVisible(true);
-		setBorder(BorderFactory.createLineBorder(gui.FIELD_BORDER, 3, false));
-		gui.board.add(this);		
+		setVisible(true); //Sichtbar machen
+		setBorder(BorderFactory.createLineBorder(gui.FIELD_BORDER, 3, false)); //Border
+		gui.board.add(this); //Hinzufuegen zu dem Schachbrett
 		
+		// Wenn auf das Feld geklickt wird
 		addMouseListener(new FieldListener(this));
 
+		// Wenn Feld andere Größe bekommt
 		addComponentListener(onResize());
 		
-	}
-	
-	public void setColor() {
-		setBackground(Color.BLUE);
 	}
 
 	public void mark() {
@@ -55,11 +53,11 @@ public class Field extends JLabel{
 		return main.allFields2D[loc.Y][loc.X];
 	}
 	
+	//Feld markieren bei möglichen Zug
 	protected void paintChildren(Graphics g) {
 		super.paintChildren(g);
 		
-		
-		Color c = marked ? gui.MARKER : new Color(0,0,0,0);
+		Color c = marked ? gui.MARKER : new Color(0,0,0,0); // Wenn unmarked werden soll, Color unsichtbar
 		int s = getWidth();
 		g.setColor(c);
 		g.fillOval(s / 3, s / 3, s / 3, s / 3);
@@ -67,9 +65,9 @@ public class Field extends JLabel{
 		
 	}
 	
+	//Wenn Größe verändert wird
 	private ComponentAdapter onResize() {
 		return new ComponentAdapter() {
-			
 			@Override
 			public void componentResized(ComponentEvent e) {
 				if(isOccupied()) {
@@ -106,6 +104,7 @@ public class Field extends JLabel{
 		}
 	}
 	
+	//Gibt alle markierten Felder zurueck
 	public static Field[] getMarked() {
 		ArrayList<Field> all = new ArrayList<Field>();
 		for(Field f : main.allFields) {

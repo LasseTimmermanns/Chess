@@ -8,6 +8,7 @@ import javax.swing.ImageIcon;
 
 public class imageloader {
 
+	//Bild von Pfad wird geladen
 	public static ImageIcon loadImage(String path) {
 		Image img = null;
 		
@@ -16,8 +17,6 @@ public class imageloader {
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
-		
-		
 		
 		return new ImageIcon(img);
 		

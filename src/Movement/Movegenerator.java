@@ -12,6 +12,11 @@ import Piece.Rook;
 
 public class Movegenerator {
 
+	
+	/*
+	 * Gibt moegliche Zuege wieder
+	 * Nuetzlich fuer gerade und diagonale Movements
+	 */
 	public static ArrayList<Move> getMoves(int x, int y, int x_operator, int y_operator, Piece p, boolean cover){
 		ArrayList<Move> out = new ArrayList<Move>();
 		boolean canContinue = true;
@@ -23,9 +28,7 @@ public class Movegenerator {
 			Location current = new Location(x, y);
 			switch(p.getMoveCode(current)) {
 			case Piece.POSSIBLE_MOVE:
-				
 				out.add(new Move(p, current, true));
-				
 				break;
 			case Piece.IS_COVERING:
 				if(!cover) {

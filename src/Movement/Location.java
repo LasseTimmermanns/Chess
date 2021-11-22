@@ -11,10 +11,12 @@ public class Location {
 		this.Y = y;
 	}
 	
+	//true, wenn im Board
 	public boolean isInBoard() {
 		return X >= 0 && X < main.COLS && Y >= 0 && Y < main.ROWS;
 	}
 	
+	//gibt Feld auf der Location zurueck
 	public Field getField() {
 		if(!isInBoard()) {
 			System.out.println("getField not in Boardrange");

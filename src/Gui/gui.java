@@ -60,13 +60,12 @@ public class gui {
 		
 	}
 	
+	//Methode damit Schachbrett immer quadratisch bleibt
 	public static void boardToSquare() {
 		int width = frame.getWidth(), height = frame.getHeight(); //deklarieren
 		int min = width < height ? width : height; //kleineren Wert feststellen
 		min = min > BOARD_SIZE_MAX ? BOARD_SIZE_MAX : min; //Max Board size eingebracht
-		
-		
-		
+			
 		min -= BOARD_MARGIN * 2; //Margin einberechnen
 		
 		board.setPreferredSize(new Dimension(min, min));

@@ -21,8 +21,7 @@ public class FieldListener implements MouseListener{
 	public void mousePressed(MouseEvent e) {
 		
 		
-		//Feld leeren
-		if(field.isMarked() && main.lastSelected != null) {
+		if(field.isMarked() && main.lastSelected != null) { //Wenn das Feld markiert ist
 			//Rochade
 			Piece p = main.lastSelected;
 			Location end = field.getPosition();
@@ -53,9 +52,11 @@ public class FieldListener implements MouseListener{
 			main.nextMove(util.findMove(p, end), false);
 		}
 		
+		//Alle gemarkten werden unmarked
 		for(Field f : Field.getMarked()) {
-			f.mark();	//Alle gemarkten werden unmarked
+			f.mark();	
 		}
+		
 		
 		if(field.isOccupied()) {				
 			Piece selected = field.getCurrentPiece();
@@ -65,7 +66,6 @@ public class FieldListener implements MouseListener{
 			}
 			
 			if(main.lastSelected != null) main.lastSelected.setMovesAreMarked(false);
-			
 			
 			main.lastSelected = selected;
 		}		

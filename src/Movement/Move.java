@@ -23,11 +23,11 @@ public class Move {
 		init(piece, end, null, null, false);
 	}
 	
-	//Ganzer Konstrukor Erste Figur, Wohin sie moved, Zweite Figur, Wohin sie moved, captured = true wenn die zweite rausgeworfen wird.
 	public Move(Piece piece, Location end,  Piece p2, Location loc2, boolean captured) {
 		init(piece, end, p2, loc2, captured);
 	}
 	
+	//Ganzer Konstrukor Erste Figur, Wohin sie moved, Zweite Figur, Wohin sie moved, captured = true wenn die zweite rausgeworfen wird.
 	private void init(Piece piece, Location end,  Piece p2, Location loc2, boolean captured) {
 		this.index = latest != null ? latest.getIndex() : 1;
 		this.piece = piece;
