@@ -39,7 +39,7 @@ public class Field extends JLabel{
 		// Wenn auf das Feld geklickt wird
 		addMouseListener(new FieldListener(this));
 
-		// Wenn Feld andere Größe bekommt
+		// Wenn Feld andere Grï¿½ï¿½e bekommt
 		addComponentListener(onResize());
 		
 	}
@@ -53,7 +53,7 @@ public class Field extends JLabel{
 		return main.allFields2D[loc.Y][loc.X];
 	}
 	
-	//Feld markieren bei möglichen Zug
+	//Feld markieren bei mï¿½glichen Zug
 	protected void paintChildren(Graphics g) {
 		super.paintChildren(g);
 		
@@ -65,7 +65,7 @@ public class Field extends JLabel{
 		
 	}
 	
-	//Wenn Größe verändert wird
+	//Wenn Grï¿½ï¿½e verï¿½ndert wird
 	private ComponentAdapter onResize() {
 		return new ComponentAdapter() {
 			@Override
@@ -114,6 +114,13 @@ public class Field extends JLabel{
 		}
 		
 		return util.fieldListToArray(all);
+	}
+	
+	public static void clearCoverings() {
+		for(Field f : main.allFields) {
+			f.setCoveredBy(0, false);
+			f.setCoveredBy(1, false);
+		}
 	}
 	
 	public Color getFieldColor() {

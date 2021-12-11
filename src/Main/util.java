@@ -29,4 +29,8 @@ public class util {
 		return null;
 	}
 	
+	public static int getOtherColor(int color) {
+		return color == 0 ? 1 : 0;
+	}
+	
 }

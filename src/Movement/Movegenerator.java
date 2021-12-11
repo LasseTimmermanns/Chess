@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import Gui.Field;
 import Main.main;
+import Main.util;
 import Piece.King;
 import Piece.Knight;
 import Piece.Pawn;
@@ -28,16 +29,27 @@ public class Movegenerator {
 			Location current = new Location(x, y);
 			switch(p.getMoveCode(current)) {
 			case Piece.POSSIBLE_MOVE:
-				out.add(new Move(p, current, true));
+				out.add(new Move(p, current, false));
 				break;
 			case Piece.IS_COVERING:
 				if(!cover) {
 					canContinue = false;
-					break;
+				}else {
+					out.add(new Move(p, current, false));	
 				}
+				
+				break;
 			case Piece.CAN_HIT:
 				out.add(new Move(p, current, true));
-				canContinue = false;
+				Piece pieceOnField = current.getField().getCurrentPiece();
+				if(!(cover && pieceOnField.getColor() != p.getColor() && pieceOnField.getType() == Piece.TYPE_KING)) {
+					/*
+					 * Wenn gewählte Figur im Cover-Modus ist und die Figur die er schlagen würde der gegenerische König ist,
+					 * sind die dahinter immernoch gecovered, weil dahin der König auch nicht rennen darf
+					 */
+					
+					canContinue = false;
+				}
 				break;
 			case Piece.NOT_POSSIBLE_MOVE:
 				canContinue = false;
@@ -59,15 +71,6 @@ public class Movegenerator {
 		out.addAll(getMoves(x, y, (-1), 0, p, cover)); //Links
 		out.addAll(getMoves(x, y, 0, 1, p, cover)); //Oben
 		out.addAll(getMoves(x, y, 0, (-1), p, cover)); //Unten
-		
-		
-		if(p.getName() == "Turm") {
-			System.out.println("---");
-			System.out.println(cover);
-			for(Move m : out) {
-				System.out.println(m);
-			}
-		}
 		
 		return out;
 	}
@@ -145,21 +148,22 @@ public class Movegenerator {
 				if(r.isAlreadyMoved()) continue;
 				if(r.getColor() != k.getColor()) continue;
 				
-				Location loc = k.getLocation();
 				boolean obstructed = false;
+				Location loc = new Location(k.getLocation().X + r.getSide(), k.getLocation().Y);
 				while(loc.isInBoard() && !obstructed) {
-					loc = new Location(loc.X + r.getSide(), loc.Y);
 					
 					Field f = Field.getFieldByLocation(loc);
 					if(f.isOccupied()) {
 						if(f.getCurrentPiece() == r) break;
 						obstructed = true;
 					}
+					
+					loc = new Location(loc.X + r.getSide(), loc.Y);
 				}
 				
 				if(!obstructed) {
 					Location kingLoc = new Location(k.getLocation().X + (r.getSide() * 2), k.getLocation().Y);
-					Location rookLoc = new Location(kingLoc.X + r.getSide(), kingLoc.Y);
+					Location rookLoc = new Location(kingLoc.X - r.getSide(), kingLoc.Y);
 					out.add(new Move(k, kingLoc, r, rookLoc, false));
 				}
 				
@@ -189,7 +193,7 @@ public class Movegenerator {
 		
 		if(cover) return out;
 		
-		int opponentsColor = k.getColor() == main.COLOR_WHITE ? main.COLOR_BLACK : main.COLOR_WHITE;
+		int opponentsColor = k.getColor() == main.COLOR_WHITE ? main.COLOR_BLACK : main.COLOR_WHITE;		
 		for(Move move : new ArrayList<Move>(out)) { //Arraylist Kopie um ConcurrentModificationException zu vermeiden
 			if(move.getEnd().getField().isCoveredBy(opponentsColor)) {
 				out.remove(move);
@@ -205,7 +209,6 @@ public class Movegenerator {
 	
 	//Methode fügt Location hinzu, wenn eine der Bedingungen erfüllt ist
 	private static ArrayList<Move> addMoveWhenCondition(Piece p, Move move, int[] conditions, ArrayList<Move> moves){
-			
 		for(int condition : conditions) {
 			if(p.getMoveCode(move.getEnd()) == condition) {
 				moves.add(move);

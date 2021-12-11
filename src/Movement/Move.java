@@ -1,11 +1,12 @@
 package Movement;
 
+import Main.main;
 import Piece.Piece;
 
 public class Move {
 
-	private Piece piece;
-	private Location start, end;
+	private Piece piece, piece2;
+	private Location start, end, loc2;
 	private int index;
 	public static Move latest;
 	boolean played, captured;
@@ -15,12 +16,7 @@ public class Move {
 	}
 	
 	public Move(Piece piece, Location end, boolean captured) {
-		if(captured) {
-			init(piece, end, null, null, true);
-			return;
-		}
-
-		init(piece, end, null, null, false);
+		init(piece, end, null, null, captured);
 	}
 	
 	public Move(Piece piece, Location end,  Piece p2, Location loc2, boolean captured) {
@@ -28,21 +24,30 @@ public class Move {
 	}
 	
 	//Ganzer Konstrukor Erste Figur, Wohin sie moved, Zweite Figur, Wohin sie moved, captured = true wenn die zweite rausgeworfen wird.
-	private void init(Piece piece, Location end,  Piece p2, Location loc2, boolean captured) {
+	private void init(Piece piece, Location end,  Piece piece2, Location loc2, boolean captured) {
 		this.index = latest != null ? latest.getIndex() : 1;
 		this.piece = piece;
 		this.start = piece.getLocation();
+		this.piece2 = piece2;
+		this.loc2 = loc2;
 		this.end = end;
-		this.captured = true;
+		this.captured = captured;
 	}
 	
 	public void setPlayed() {
 		
 		//Damit nicht zweimal setPlayed() gemacht wird
 		if(this.played) return;
-		
 		this.played = true;
+		
+		if(captured) Piece.all.remove(end.getField().getCurrentPiece());
+		if(piece2 != null) {
+			piece2.move(loc2.getField());
+		}
+		piece.move(end.getField());		
 		latest = this;
+		
+		main.nextMove(this, false);
 	}
 	
 	public Piece getPiece() {

@@ -15,9 +15,9 @@ public class Rook extends Piece{
 	private static ArrayList<Rook> all = new ArrayList<Rook>();
 
 	public Rook(int color, Location loc) {		
-		super("Turm", color, loc, color == 0 ? main.rock_white_img : main.rock_black_img, 5);
+		super(Piece.TYPE_ROOK, "Turm", color, loc, color == 0 ? main.rock_white_img : main.rock_black_img, 5);
 		
-		if(loc.X == 0) side = -1;
+		if(loc.X < 4) side = -1;
 		
 		all.add(this);
 	}

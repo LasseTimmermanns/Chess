@@ -17,21 +17,21 @@ public class main {
 	public static final int ROWS = 8, COLS = 8; // Reihen und Spaltenanzahl
 	public static Field[][] allFields2D = new Field[ROWS][COLS]; //2d array um geordnet Felder zu speichern
 	public static Field[] allFields = new Field[ROWS * COLS]; //1d array um Felder zu iteraten
-	public static ImageIcon pawn_white_img, knight_white_img, bishop_white_img, rock_white_img, queen_white_img, king_white_img; //uninstanzierte Bilder für weiße Figuren
-	public static ImageIcon pawn_black_img, knight_black_img, bishop_black_img, rock_black_img, queen_black_img, king_black_img; //uninstanzierte Bilder für schwarze Figuren
+	public static ImageIcon pawn_white_img, knight_white_img, bishop_white_img, rock_white_img, queen_white_img, king_white_img; //uninstanzierte Bilder fï¿½r weiï¿½e Figuren
+	public static ImageIcon pawn_black_img, knight_black_img, bishop_black_img, rock_black_img, queen_black_img, king_black_img; //uninstanzierte Bilder fï¿½r schwarze Figuren
 	
 	public static final Class<?>[][] START_BOARD = 
-			{{Piece.ROOK, Piece.KNIGHT, Piece.BISHOP, Piece.KING, Piece.QUEEN, Piece.BISHOP, Piece.KNIGHT, Piece.ROOK},
-			{Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN},
-			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
-			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
-			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.ROOK, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
-			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
-			{Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN},
-			{Piece.ROOK, Piece.KNIGHT, Piece.BISHOP, Piece.KING, Piece.QUEEN, Piece.BISHOP, Piece.KNIGHT, Piece.ROOK}}; //Startfiguren Verteilung auf dem Spielfeld
-	public static Piece lastSelected = null; //Letzte ausgewählte Figur
-	public static final int COLOR_WHITE = 0, COLOR_BLACK = 1, COLOR_WHITE_DIRECTION = 1, COLOR_BLACK_DIRECTION = -1; //Farben und Richtungen für Movement
-	public static int colorCanMove = COLOR_WHITE; //Farbe die führen darf
+			{{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
+			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.KING, Piece.EMPTY, Piece.EMPTY},
+			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.QUEEN, Piece.EMPTY},
+			{Piece.QUEEN, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
+			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.QUEEN, Piece.EMPTY},
+			{Piece.EMPTY, Piece.EMPTY, Piece.KING, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
+			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.QUEEN, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
+			{Piece.ROOK, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.KING, Piece.EMPTY, Piece.EMPTY, Piece.ROOK}}; //Startfiguren Verteilung auf dem Spielfeld
+	public static Piece lastSelected = null; //Letzte ausgewï¿½hlte Figur
+	public static final int COLOR_WHITE = 0, COLOR_BLACK = 1, COLOR_WHITE_DIRECTION = 1, COLOR_BLACK_DIRECTION = -1; //Farben und Richtungen fï¿½r Movement
+	public static int colorCanMove = COLOR_WHITE; //Farbe die fï¿½hren darf
 	
 	
 	public static void main(String[] args) {
@@ -44,25 +44,24 @@ public class main {
 		g.complete(); //JFrame wird sichtbar gemacht
 		
 		updatePieceCoverings(); //Es wird geupdatet, welche Figuren welche Felder decken
-		updatePieceMoves(); //Es wird geupdatet, welche Figuren wohin moven können
+		updatePieceMoves(); //Es wird geupdatet, welche Figuren wohin moven kï¿½nnen
 		
 	}
 	
 	
 	public static void nextMove(Move move, boolean firstMove) {
 		colorCanMove = colorCanMove == COLOR_WHITE ? COLOR_BLACK : COLOR_WHITE;
-		//colorCanMove = COLOR_WHITE;
-		
-		move.setPlayed();
-		
+				
 		updatePieceCoverings();
 		updatePieceMoves();
 	}
 	
 	//Es wird geupdatet, welche Figuren welche Felder decken
 	public static void updatePieceCoverings() {
+		Field.clearCoverings();
+		
 		for(Piece p : Piece.all) {
-			if(p.getColor() == colorCanMove)
+			//if(p.getColor() == colorCanMove)
 			p.updateCoverings();
 			if(p.getCoverings() == null) continue;
 			for(Move move : p.getCoverings()) {
@@ -71,7 +70,7 @@ public class main {
 		}
 	}
 	
-	// Es wird geupdatet, welche Figuren wohin moven können
+	// Es wird geupdatet, welche Figuren wohin moven kï¿½nnen
 	public static void updatePieceMoves() {
 		for(Piece p : Piece.all) {
 			if(p.getColor() != colorCanMove) {
@@ -130,7 +129,7 @@ public class main {
 		king_black_img = imageloader.loadImage(path_base + "king_black.png");
 	}
 	
-	//Berechnet ob ein Feld schwarz oder weiß ist
+	//Berechnet ob ein Feld schwarz oder weiï¿½ ist
 	//Formel: (x + y) % 2 == 0
 	public static Color getFieldColor(int sum) {
 		if(sum % 2 == 0) {
@@ -140,7 +139,7 @@ public class main {
 		return gui.WHITE;
 	}
 	
-	//Figurenbilder werden auf richtige Größe gesetzt
+	//Figurenbilder werden auf richtige Grï¿½ï¿½e gesetzt
 	public static ImageIcon resizeImage(ImageIcon old, int newWidth, int newHeight) {
 		return new ImageIcon(old.getImage().getScaledInstance(newWidth, newHeight,  java.awt.Image.SCALE_SMOOTH));
 	}

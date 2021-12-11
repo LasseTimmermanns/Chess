@@ -13,17 +13,19 @@ public class Piece {
 	public static final int NULL = -1, NOT_POSSIBLE_MOVE = 0, POSSIBLE_MOVE = 1, CAN_HIT = 2, IS_COVERING = 3;
 	public static final Class<?> PAWN = Pawn.class, KNIGHT = Knight.class, BISHOP = 
 			Bishop.class, ROOK = Rook.class, QUEEN = Queen.class, KING = King.class, EMPTY = null;
+	public static final int TYPE_PAWN = 0, TYPE_KNIGHT = 1, TYPE_BISHOP = 2, TYPE_ROOK = 3, TYPE_QUEEN = 4, TYPE_KING = 5;
 	public static ArrayList<Piece> all = new ArrayList<Piece>();
 	private ImageIcon icon;
 	private String name;
 	private Location location;
 	private Field field;
 	protected ArrayList<Move> coverings = new ArrayList<Move>(), possibleMoves = new ArrayList<Move>();
-	private int value, color;
+	private int value, color, type;
 	private boolean movesAreMarked, alreadyMoved;
 	
 	
-	public Piece(String name, int color, Location loc, ImageIcon icon, int value) {
+	public Piece(int type, String name, int color, Location loc, ImageIcon icon, int value) {
+		this.type = type;
 		this.name = name;
 		this.color = color;
 		this.location = loc;
@@ -120,8 +122,9 @@ public class Piece {
 		}
 		
 		this.movesAreMarked = !movesAreMarked;
+	}	
+	
+	public int getType() {
+		return type;
 	}
-	
-	
-	
 }

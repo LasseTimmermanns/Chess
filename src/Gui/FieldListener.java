@@ -2,10 +2,12 @@ package Gui;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import Main.main;
 import Main.util;
 import Movement.Location;
+import Movement.Move;
 import Piece.Piece;
 import Piece.Rook;
 
@@ -20,9 +22,39 @@ public class FieldListener implements MouseListener{
 	@Override
 	public void mousePressed(MouseEvent e) {
 		
+		if(field.isMarked()) { //Zug wird gemacht
+			for(Move m : new ArrayList<Move>(main.lastSelected.getPossibleMoves())) {
+				if(m.getEnd().getField().equals(field)) { //Richtiger Zug
+					
+					//Alle gemarkten werden unmarked
+					for(Field f : Field.getMarked()) {
+						f.mark();	
+					}
+					
+					m.setPlayed();
+				}
+			}	
+		}else { //Neue Figur wird ausgewÃ¤hlt oder marker werden entfernt
+			//Alle gemarkten werden unmarked
+			for(Field f : Field.getMarked()) {
+				f.mark();	
+			}
+			
+			if(field.isOccupied()) {				
+				Piece selected = field.getCurrentPiece();
+				
+				if(!selected.movesAreMarked()) {
+					selected.markMoves();
+				}
+				
+				if(main.lastSelected != null) main.lastSelected.setMovesAreMarked(false);
+				
+				main.lastSelected = selected;
+			}		
+		}
 		
+		/*
 		if(field.isMarked() && main.lastSelected != null) { //Wenn das Feld markiert ist
-			//Rochade
 			Piece p = main.lastSelected;
 			Location end = field.getPosition();
 			
@@ -47,28 +79,14 @@ public class FieldListener implements MouseListener{
 				}
 			}
 			
-			//Move wird durchgeführt
+			//Move wird durchgefï¿½hrt
 			p.move(field);
 			main.nextMove(util.findMove(p, end), false);
-		}
-		
-		//Alle gemarkten werden unmarked
-		for(Field f : Field.getMarked()) {
-			f.mark();	
-		}
+		}*/
 		
 		
-		if(field.isOccupied()) {				
-			Piece selected = field.getCurrentPiece();
-			
-			if(!selected.movesAreMarked()) {
-				selected.markMoves();
-			}
-			
-			if(main.lastSelected != null) main.lastSelected.setMovesAreMarked(false);
-			
-			main.lastSelected = selected;
-		}		
+		
+		
 	}
 
 	@Override
