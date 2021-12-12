@@ -22,6 +22,7 @@ public class Field extends JLabel{
 	private Location location;
 	private Piece currentPiece;
 	private boolean[] coveredBy;
+	private Color markerColor;
 	
 	
 	public Field(Location loc) {
@@ -43,8 +44,22 @@ public class Field extends JLabel{
 		addComponentListener(onResize());
 		
 	}
-
-	public void mark() {
+	
+	public void markChess() {
+		main.chessMarked = this;
+		setBorder(BorderFactory.createLineBorder(gui.CHESS_MARKER, 3, false));
+	}
+	
+	public void resetBorder() {
+		setBorder(BorderFactory.createLineBorder(gui.FIELD_BORDER, 3, false));
+	}
+	
+	public void markMove() {
+		markerColor = gui.MOVE_MARKER;
+		mark();
+	}
+	
+	private void mark() {
 		marked = !marked;
 		this.updateUI();
 	}
@@ -57,7 +72,7 @@ public class Field extends JLabel{
 	protected void paintChildren(Graphics g) {
 		super.paintChildren(g);
 		
-		Color c = marked ? gui.MARKER : new Color(0,0,0,0); // Wenn unmarked werden soll, Color unsichtbar
+		Color c = marked ? markerColor: new Color(0,0,0,0); // Wenn unmarked werden soll, Color unsichtbar
 		int s = getWidth();
 		g.setColor(c);
 		g.fillOval(s / 3, s / 3, s / 3, s / 3);

@@ -3,6 +3,7 @@ package Main;
 import java.awt.Color;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
@@ -10,6 +11,7 @@ import Gui.Field;
 import Gui.gui;
 import Movement.Location;
 import Movement.Move;
+import Piece.King;
 import Piece.Piece;
 
 public class main {
@@ -21,17 +23,21 @@ public class main {
 	public static ImageIcon pawn_black_img, knight_black_img, bishop_black_img, rock_black_img, queen_black_img, king_black_img; //uninstanzierte Bilder f�r schwarze Figuren
 	
 	public static final Class<?>[][] START_BOARD = 
-			{{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
-			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.KING, Piece.EMPTY, Piece.EMPTY},
-			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.QUEEN, Piece.EMPTY},
-			{Piece.QUEEN, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
-			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.QUEEN, Piece.EMPTY},
-			{Piece.EMPTY, Piece.EMPTY, Piece.KING, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
-			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.QUEEN, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
-			{Piece.ROOK, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.KING, Piece.EMPTY, Piece.EMPTY, Piece.ROOK}}; //Startfiguren Verteilung auf dem Spielfeld
+			{{Piece.ROOK, Piece.KNIGHT, Piece.BISHOP, Piece.KING, Piece.QUEEN, Piece.BISHOP, Piece.KNIGHT, Piece.ROOK},
+			{Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN},
+			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
+			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
+			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
+			{Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY},
+			{Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN, Piece.PAWN},
+			{Piece.ROOK, Piece.KNIGHT, Piece.BISHOP, Piece.KING, Piece.QUEEN, Piece.BISHOP, Piece.KNIGHT, Piece.ROOK}}; //Startfiguren Verteilung auf dem Spielfeld
 	public static Piece lastSelected = null; //Letzte ausgew�hlte Figur
 	public static final int COLOR_WHITE = 0, COLOR_BLACK = 1, COLOR_WHITE_DIRECTION = 1, COLOR_BLACK_DIRECTION = -1; //Farben und Richtungen f�r Movement
 	public static int colorCanMove = COLOR_WHITE; //Farbe die f�hren darf
+	public static ArrayList<Location> howToStopChess = new ArrayList<Location>();
+	public static boolean check = false;
+	public static int checkers = 0; //Wieviele Figuren sagen Schach
+	public static Field chessMarked = null;
 	
 	
 	public static void main(String[] args) {
@@ -45,15 +51,39 @@ public class main {
 		
 		updatePieceCoverings(); //Es wird geupdatet, welche Figuren welche Felder decken
 		updatePieceMoves(); //Es wird geupdatet, welche Figuren wohin moven k�nnen
+		filterMoves(); //Falsche Züge werden weggemacht (Am Anfang ansich unnötig da alles geht)
 		
 	}
 	
 	
 	public static void nextMove(Move move, boolean firstMove) {
+		if(chessMarked != null) chessMarked.resetBorder();
 		colorCanMove = colorCanMove == COLOR_WHITE ? COLOR_BLACK : COLOR_WHITE;
 				
+		howToStopChess.clear();
+		
+		for(Piece p : Piece.all) {
+			p.clearMoves();
+		}
+		
+		
+		
 		updatePieceCoverings();
 		updatePieceMoves();
+		filterMoves();
+		checkGameEnd();
+		
+
+		if(check == true) {
+			for(Piece p : Piece.all) {
+				if(p.getColor() == colorCanMove && p.getType() == Piece.TYPE_KING) {
+					p.getLocation().getField().markChess();
+				}
+			}
+		}
+		
+		check = false;
+		checkers = 0;
 	}
 	
 	//Es wird geupdatet, welche Figuren welche Felder decken
@@ -74,11 +104,36 @@ public class main {
 	public static void updatePieceMoves() {
 		for(Piece p : Piece.all) {
 			if(p.getColor() != colorCanMove) {
-				p.clearPossibleMoves();
+				p.clearMoves();
 				continue;
 			}
-			p.updatePossibleMoves();
+			p.updateRawMoves();
 		}
+	}
+	
+	//Ungültige Züge werden entfernt wie, wenn Schach ist oder eine Figur gebunden ist
+	public static void filterMoves() {
+		for(Piece p : Piece.all) {
+			p.filterMoves();
+		}
+	}
+	
+	public static int checkGameEnd() {
+		boolean gotMoves = false;
+		for(Piece p : Piece.all) {	
+			if(p.getColor() != colorCanMove) continue;
+			if(p.getPlayableMoves().size() > 0) gotMoves = true;
+		}
+		
+		if(!gotMoves) {
+			if(check) {
+				GameEnd.end(GameEnd.CHECKMATE);
+			}else {
+				GameEnd.end(GameEnd.STALEMATE);
+			}
+		}
+		
+		return -1;
 	}
 	
 	private static void createFields() {
@@ -141,7 +196,18 @@ public class main {
 	
 	//Figurenbilder werden auf richtige Gr��e gesetzt
 	public static ImageIcon resizeImage(ImageIcon old, int newWidth, int newHeight) {
-		return new ImageIcon(old.getImage().getScaledInstance(newWidth, newHeight,  java.awt.Image.SCALE_SMOOTH));
+		return new ImageIcon(old.getImage().getScaledInstance(newWidth, newHeight, java.awt.Image.SCALE_SMOOTH));
+	}
+	
+	public static void check() {
+		check = true;
+		checkers++;
+		
+		for(Piece p : Piece.all) {
+			if(p.getColor() == colorCanMove && p.getType() == Piece.TYPE_KING) {
+				p.getLocation().getField().markChess();
+			}
+		}
 	}
 
 }

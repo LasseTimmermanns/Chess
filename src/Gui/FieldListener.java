@@ -23,12 +23,12 @@ public class FieldListener implements MouseListener{
 	public void mousePressed(MouseEvent e) {
 		
 		if(field.isMarked()) { //Zug wird gemacht
-			for(Move m : new ArrayList<Move>(main.lastSelected.getPossibleMoves())) {
+			for(Move m : new ArrayList<Move>(main.lastSelected.getPlayableMoves())) {
 				if(m.getEnd().getField().equals(field)) { //Richtiger Zug
 					
 					//Alle gemarkten werden unmarked
 					for(Field f : Field.getMarked()) {
-						f.mark();	
+						f.markMove();	
 					}
 					
 					m.setPlayed();
@@ -37,7 +37,7 @@ public class FieldListener implements MouseListener{
 		}else { //Neue Figur wird ausgewählt oder marker werden entfernt
 			//Alle gemarkten werden unmarked
 			for(Field f : Field.getMarked()) {
-				f.mark();	
+				f.markMove();	
 			}
 			
 			if(field.isOccupied()) {				

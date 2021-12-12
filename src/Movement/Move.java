@@ -16,7 +16,11 @@ public class Move {
 	}
 	
 	public Move(Piece piece, Location end, boolean captured) {
-		init(piece, end, null, null, captured);
+		if(captured && end.isInBoard()) {
+			init(piece, end, end.getField().getCurrentPiece(), null, true);
+		}else {
+			init(piece, end, null, null, false);
+		}
 	}
 	
 	public Move(Piece piece, Location end,  Piece p2, Location loc2, boolean captured) {
@@ -40,8 +44,13 @@ public class Move {
 		if(this.played) return;
 		this.played = true;
 		
-		if(captured) Piece.all.remove(end.getField().getCurrentPiece());
-		if(piece2 != null) {
+		if(captured) {
+			System.out.println(piece2.getName());
+			System.out.println(piece2.getLocation());
+			piece2.getLocation().getField().removePiece();
+			Piece.all.remove(piece2);
+		}
+		if(piece2 != null && loc2 != null && !captured) {
 			piece2.move(loc2.getField());
 		}
 		piece.move(end.getField());		
@@ -67,7 +76,7 @@ public class Move {
 	}
 	
 	public String toString() {
-		return getPiece().getName() + ": " + start.toString() + " -> " + end.toString();
+		return getPiece().getColor() + " " + getPiece().getName() + ": " + start.toString() + " -> " + end.toString();
 	}
 
 }

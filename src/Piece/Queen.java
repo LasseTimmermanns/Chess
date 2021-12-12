@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import Main.main;
 import Movement.Location;
 import Movement.Move;
-import Movement.Movegenerator;
+import Movement.Generator.DiagonalMoves;
+import Movement.Generator.StraightMoves;
 
 public class Queen extends Piece{
 
@@ -15,16 +16,16 @@ public class Queen extends Piece{
 	
 	@Override
 	public void updateCoverings() {
-		ArrayList<Move> moves = Movegenerator.getStraightMoves(this, true);
-		moves.addAll(Movegenerator.getDiagonalMoves(this, true));
+		ArrayList<Move> moves = StraightMoves.get(this, true);
+		moves.addAll(DiagonalMoves.get(this, true));
 		super.coverings = moves;
 	}
 	
 	@Override
-	public void updatePossibleMoves() {
-		ArrayList<Move> moves = Movegenerator.getStraightMoves(this, false);
-		moves.addAll(Movegenerator.getDiagonalMoves(this, false));
-		super.possibleMoves = moves;
+	public void updateRawMoves() {
+		ArrayList<Move> moves = StraightMoves.get(this, false);
+		moves.addAll(DiagonalMoves.get(this, false));
+		super.rawMoves = moves;
 	}
 
 }

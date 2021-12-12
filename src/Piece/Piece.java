@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
 import Gui.Field;
+import Main.main;
 import Movement.Location;
 import Movement.Move;
 
@@ -19,7 +20,8 @@ public class Piece {
 	private String name;
 	private Location location;
 	private Field field;
-	protected ArrayList<Move> coverings = new ArrayList<Move>(), possibleMoves = new ArrayList<Move>();
+	protected ArrayList<Move> coverings = new ArrayList<Move>(), rawMoves = new ArrayList<Move>(), playableMoves = new ArrayList<Move>();
+	protected ArrayList<Location> possibleLocations = new ArrayList<Location>();
 	private int value, color, type;
 	private boolean movesAreMarked, alreadyMoved;
 	
@@ -72,14 +74,20 @@ public class Piece {
 		this.alreadyMoved = true;
 	}
 	
-	public ArrayList<Move> getPossibleMoves() {
-		return possibleMoves;
+	public ArrayList<Move> getPlayableMoves() {
+		return playableMoves;
 	}
 	
-	public void updatePossibleMoves() {}
+	public void addPossibleLocations(ArrayList<Location> arrList) {
+		possibleLocations.addAll(arrList);
+	}
 	
-	public void clearPossibleMoves() {
-		possibleMoves.clear();
+	public void updateRawMoves() {}
+	
+	public void clearMoves() {
+		rawMoves.clear();
+		possibleLocations.clear();
+		playableMoves.clear();
 	}
 	
 	public ArrayList<Move> getCoverings() {
@@ -117,8 +125,8 @@ public class Piece {
 	}
 	
 	public void markMoves() {
-		for(Move m : this.getPossibleMoves()) {
-			m.getEnd().getField().mark();
+		for(Move m : this.getPlayableMoves()) {
+			m.getEnd().getField().markMove();
 		}
 		
 		this.movesAreMarked = !movesAreMarked;
@@ -126,5 +134,30 @@ public class Piece {
 	
 	public int getType() {
 		return type;
+	}
+	
+	public void filterMoves() {
+		possibleLocations.addAll(main.howToStopChess);
+		
+		//Wenn Liste leer ist, sind alle Züge möglich
+		//König darf sich immer (wenn nicht in Gebiet das besetzt ist) bewegen
+		if(possibleLocations.size() == 0 || getType() == TYPE_KING) {
+			playableMoves.addAll(rawMoves);
+			return;
+		}
+
+		if(main.checkers > 1) return;  //Wenn mehr als eine Figur Schach "sagt", kann nur der König sich bewegen um Schach zu verhindern
+		
+		for(Move m : new ArrayList<Move>(rawMoves)) {
+			boolean correctMove = false;
+			for(Location loc : possibleLocations) {
+				if(m.getEnd().toString().equals(loc.toString())) {
+					correctMove = true;
+					break;
+				}
+			}
+			
+			if(correctMove) playableMoves.add(m);
+		}
 	}
 }

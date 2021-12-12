@@ -9,6 +9,7 @@ public class Location {
 	public Location(int x, int y) {
 		this.X = x;
 		this.Y = y;
+		
 	}
 	
 	//true, wenn im Board
@@ -19,7 +20,7 @@ public class Location {
 	//gibt Feld auf der Location zurueck
 	public Field getField() {
 		if(!isInBoard()) {
-			System.out.println("getField not in Boardrange");
+			System.out.println("Nicht inboard " + this.toString());
 			return null;
 		}
 		

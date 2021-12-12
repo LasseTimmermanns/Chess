@@ -11,6 +11,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import Main.main;
+
 public class gui {
 	
 	public static JFrame jf; //Fenster
@@ -21,7 +23,8 @@ public class gui {
 	public static final Color WHITE = new Color(255,253,208), BLACK = new Color(26,8,0); //Feld Farbwerte festgelegt
 	public static final Color FIELD_BORDER = new Color(77,38,0);//Randfarbe festgelegt
 	public static final Color BACKGROUND = new Color(156, 112, 56); //Hintergrundfarbe für JFrame erstellt
-	public static final Color MARKER = new Color(61, 138, 56); //Farbe f�r die Markierungen, wenn man einen Zug machen kann
+	public static final Color MOVE_MARKER = new Color(61, 138, 56); //Farbe f�r die Markierungen, wenn man einen Zug machen kann
+	public static final Color CHESS_MARKER = new Color(252, 48, 3); //Farbe f�r die Markierungen, wenn der König unter Schach steht
 	
 	public gui() {
 		//Fenster wird erstellt

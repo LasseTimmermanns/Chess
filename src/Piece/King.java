@@ -2,7 +2,7 @@ package Piece;
 
 import Main.main;
 import Movement.Location;
-import Movement.Movegenerator;
+import Movement.Generator.KingMoves;
 
 public class King extends Piece{
 
@@ -12,12 +12,12 @@ public class King extends Piece{
 	
 	@Override
 	public void updateCoverings() {
-		super.coverings = Movegenerator.getKingMoves(this, true);
+		super.coverings = KingMoves.get(this, true);
 	}
 	
 	@Override
-	public void updatePossibleMoves() {
-		super.possibleMoves = Movegenerator.getKingMoves(this, false);
+	public void updateRawMoves() {
+		super.rawMoves = KingMoves.get(this, false);
 	}
 
 }

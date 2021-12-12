@@ -4,8 +4,7 @@ import java.util.ArrayList;
 
 import Main.main;
 import Movement.Location;
-import Movement.Move;
-import Movement.Movegenerator;
+import Movement.Generator.StraightMoves;
 
 public class Rook extends Piece{
 	
@@ -24,12 +23,12 @@ public class Rook extends Piece{
 	
 	@Override
 	public void updateCoverings() {
-		super.coverings = Movegenerator.getStraightMoves(this, true);
+		super.coverings = StraightMoves.get(this, true);
 	}
 	
 	@Override
-	public void updatePossibleMoves() {
-		super.possibleMoves = Movegenerator.getStraightMoves(this, false);
+	public void updateRawMoves() {
+		super.rawMoves = StraightMoves.get(this, false);
 	}
 	
 	public static ArrayList<Rook> getAll() {

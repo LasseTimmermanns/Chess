@@ -21,7 +21,7 @@ public class util {
 	
 	//Funktion findet den passenden Move zu Figur und neuer Position
 	public static Move findMove(Piece p, Location end) {
-		for(Move m : p.getPossibleMoves()) {
+		for(Move m : p.getPlayableMoves()) {
 			if((m.getEnd().X == end.X) && (m.getEnd().Y == end.Y)) return m;
 		}
 		
