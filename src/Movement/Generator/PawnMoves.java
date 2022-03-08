@@ -21,11 +21,7 @@ public class PawnMoves {
 				diagonalLeft = new Location(forward.X - 1, forward.Y),
 				diagonalRight = new Location(forward.X + 1, forward.Y);
 		
-		if(cover) {
-			if(diagonalLeft.isInBoard()) out.add(new Move(p, diagonalLeft));
-			if(diagonalRight.isInBoard()) out.add(new Move(p, diagonalRight));
-			return out;
-		}
+		
 
 		//En Passant
 		Move latest = Move.latest;
@@ -41,17 +37,23 @@ public class PawnMoves {
 					}
 				}
 			}
+		}		
+	
+		
+		out = addMoveWhenCondition(p, new Move(p, forward), new int[]{Piece.POSSIBLE_MOVE}, out, cover);
+		out = addMoveWhenCondition(p, new Move(p, diagonalLeft, true), new int[]{Piece.CAN_HIT}, out, cover);
+		out = addMoveWhenCondition(p, new Move(p, diagonalRight, true), new int[]{Piece.CAN_HIT}, out, cover);
+		
+		if(cover) {
+			if(diagonalLeft.isInBoard()) out.add(new Move(p, diagonalLeft));
+			if(diagonalRight.isInBoard()) out.add(new Move(p, diagonalRight));
+			
+			return out;
 		}
-		
-		
-		
-		out = addMoveWhenCondition(p, new Move(p, forward), new int[]{Piece.POSSIBLE_MOVE}, out);
-		out = addMoveWhenCondition(p, new Move(p, diagonalLeft, true), new int[]{Piece.CAN_HIT}, out);
-		out = addMoveWhenCondition(p, new Move(p, diagonalRight, true), new int[]{Piece.CAN_HIT}, out);
 		
 		//Doppelt nach vorne
 		if(p.getMoveCode(forward) == Piece.POSSIBLE_MOVE && !p.isAlreadyMoved()) {
-			out = addMoveWhenCondition(p, new Move(p, doubleForward), new int[]{Piece.POSSIBLE_MOVE}, out);
+			out = addMoveWhenCondition(p, new Move(p, doubleForward), new int[]{Piece.POSSIBLE_MOVE}, out, false);
 		}
 		
 		return out;
@@ -59,10 +61,11 @@ public class PawnMoves {
 	
 
 	//Methode fÃ¼gt Location hinzu, wenn eine der Bedingungen erfÃ¼llt ist
-	private static ArrayList<Move> addMoveWhenCondition(Piece p, Move move, int[] conditions, ArrayList<Move> moves){
+	private static ArrayList<Move> addMoveWhenCondition(Piece p, Move move, int[] conditions, ArrayList<Move> moves, boolean checkChess){
 		for(int condition : conditions) {
 			if(p.getMoveCode(move.getEnd()) == condition) {
-				moves.add(move);
+				//Wenn im cover Mode, muss die Methode nur auf Schach überprüfen, im richtigen Mode werden die Züge hinzugefügt
+				if(!checkChess) moves.add(move);
 				
 				if((condition == Piece.CAN_HIT) && move.getEnd().getField().getCurrentPiece().getType() == Piece.TYPE_KING) {
 					main.check();

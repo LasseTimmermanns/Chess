@@ -1,7 +1,9 @@
 /Movement/
 /Main/
-/PieceChoose/
 /Gui/
-/Movegenerator/
-/Generator/
+/pieces/
+/end_menu/
+/side_menu/
+/Listeners/
 /Piece/
+/DataStructures/

@@ -29,8 +29,8 @@ public class util {
 		return null;
 	}
 	
-	public static int getOtherColor(int color) {
-		return color == 0 ? 1 : 0;
+	public static int switchColor(int color) {
+		return color == main.COLOR_WHITE ? main.COLOR_BLACK : main.COLOR_WHITE;
 	}
 	
 }

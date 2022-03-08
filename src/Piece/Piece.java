@@ -21,9 +21,10 @@ public class Piece {
 	private Location location;
 	private Field field;
 	protected ArrayList<Move> coverings = new ArrayList<Move>(), rawMoves = new ArrayList<Move>(), playableMoves = new ArrayList<Move>();
-	protected ArrayList<Location> possibleLocations = new ArrayList<Location>();
-	private int value, color, type;
-	private boolean movesAreMarked, alreadyMoved;
+	protected ArrayList<Location> possibleLocations = new ArrayList<Location>(), bindedLocations = new ArrayList<Location>();
+	private int value, color, type, moves = 0;
+	private boolean movesAreMarked;
+	
 	
 	
 	public Piece(int type, String name, int color, Location loc, ImageIcon icon, int value) {
@@ -34,16 +35,13 @@ public class Piece {
 		this.icon = icon;
 		this.value = value;
 		this.movesAreMarked = false;
-		this.alreadyMoved = false;
 		this.field = Field.getFieldByLocation(loc);
-		
 		
 		field.setPiece(this);
 		all.add(this);
 	}
 	
 	public int getMoveCode(Location newLoc) {
-		
 		if(!newLoc.isInBoard()) return NOT_POSSIBLE_MOVE;
 		if(newLoc.getField().isOccupied()) {
 			Piece p = newLoc.getField().getCurrentPiece();
@@ -52,26 +50,28 @@ public class Piece {
 		}
 		
 		return POSSIBLE_MOVE;
-	
 	}
 	
 	public void move(Field newLoc) {
-		alreadyMoved = true;
+		moves++;
 		field.removePiece();
 		
 		field = newLoc;
 		location = newLoc.getPosition();
 		
 		newLoc.setPiece(this);
-		
 	}
 	
 	public boolean isAlreadyMoved() {
-		return alreadyMoved;
+		return moves > 0;
 	}
 	
-	public void setAlreadyMoved() {
-		this.alreadyMoved = true;
+	public int getMoves() {
+		return moves;
+	}
+	
+	public void setMoves(int moves) {
+		this.moves = moves;
 	}
 	
 	public ArrayList<Move> getPlayableMoves() {
@@ -82,11 +82,16 @@ public class Piece {
 		possibleLocations.addAll(arrList);
 	}
 	
+	public void addBindedLocation(Location loc) {
+		bindedLocations.add(loc);
+	}
+	
 	public void updateRawMoves() {}
 	
 	public void clearMoves() {
 		rawMoves.clear();
 		possibleLocations.clear();
+		bindedLocations.clear();		
 		playableMoves.clear();
 	}
 	
@@ -136,16 +141,32 @@ public class Piece {
 		return type;
 	}
 	
+	public void kick() {
+		getLocation().getField().removePiece();
+		Piece.all.remove(this);
+	}
+	
+	public void revive() {
+		Piece.all.add(this);
+	}
+	
 	public void filterMoves() {
-		possibleLocations.addAll(main.howToStopChess);
+		
+		if(bindedLocations.isEmpty()) {
+			possibleLocations.addAll(main.howToStopChess);
+		}else {
+			possibleLocations.addAll(bindedLocations);
+		}
 		
 		//Wenn Liste leer ist, sind alle Züge möglich
-		//König darf sich immer (wenn nicht in Gebiet das besetzt ist) bewegen
+		//König darf sich immer (wenn das Gebiet nicht besetzt ist) bewegen
+		
 		if(possibleLocations.size() == 0 || getType() == TYPE_KING) {
 			playableMoves.addAll(rawMoves);
 			return;
 		}
-
+		
+		if(main.check && !bindedLocations.isEmpty()) return; //Wenn die Figut gebunden ist und Schach ist, kann sich diese nicht bewegen
 		if(main.checkers > 1) return;  //Wenn mehr als eine Figur Schach "sagt", kann nur der König sich bewegen um Schach zu verhindern
 		
 		for(Move m : new ArrayList<Move>(rawMoves)) {
@@ -159,5 +180,9 @@ public class Piece {
 			
 			if(correctMove) playableMoves.add(m);
 		}
+	}
+	
+	public String toString() {
+		return getName() + " " + Integer.toString(getColor());
 	}
 }

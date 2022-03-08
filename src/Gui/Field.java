@@ -2,6 +2,7 @@ package Gui;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.GridBagConstraints;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
+import Listeners.FieldListener;
 import Main.main;
 import Main.util;
 import Movement.Location;
@@ -34,8 +36,7 @@ public class Field extends JLabel{
 		setOpaque(true);
 		setBackground(fieldColor);
 		setVisible(true); //Sichtbar machen
-		setBorder(BorderFactory.createLineBorder(gui.FIELD_BORDER, 3, false)); //Border
-		gui.board.add(this); //Hinzufuegen zu dem Schachbrett
+		
 		
 		// Wenn auf das Feld geklickt wird
 		addMouseListener(new FieldListener(this));
@@ -43,16 +44,26 @@ public class Field extends JLabel{
 		// Wenn Feld andere Gr��e bekommt
 		addComponentListener(onResize());
 		
+		gui.board.add(this); //Hinzufuegen zu dem Schachbrett
 	}
 	
 	public void markChess() {
 		main.chessMarked = this;
-		setBorder(BorderFactory.createLineBorder(gui.CHESS_MARKER, 3, false));
+		setBorder(BorderFactory.createLineBorder(gui.CHESS_MARKER, (getWidth() / 25) > 1 ? (getWidth() / 25) : 1, false));
 	}
 	
 	public void resetBorder() {
-		setBorder(BorderFactory.createLineBorder(gui.FIELD_BORDER, 3, false));
+		setBorder(BorderFactory.createLineBorder(gui.FIELD_BORDER, (getWidth() / 25) > 1 ? (getWidth() / 25) : 1, false));
 	}
+	
+	public void resizeBorder() {
+		if(main.check && main.chessMarked == this) {
+			markChess();
+		}else {
+			resetBorder();
+		}
+	}
+	
 	
 	public void markMove() {
 		markerColor = gui.MOVE_MARKER;
@@ -88,6 +99,8 @@ public class Field extends JLabel{
 				if(isOccupied()) {
 					resizeIcon();
 				}
+				
+				resizeBorder();
 			}
 		};
 		

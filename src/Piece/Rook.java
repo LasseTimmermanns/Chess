@@ -16,8 +16,17 @@ public class Rook extends Piece{
 	public Rook(int color, Location loc) {		
 		super(Piece.TYPE_ROOK, "Turm", color, loc, color == 0 ? main.rock_white_img : main.rock_black_img, 5);
 		
-		if(loc.X < 4) side = -1;
-		
+		init(loc.X < 4 ? -1 : 1);
+	}
+	
+	public Rook(int color, Location loc, int side) {		
+		super(Piece.TYPE_ROOK, "Turm", color, loc, color == 0 ? main.rock_white_img : main.rock_black_img, 5);
+		 
+		init(side);
+	}
+	
+	public void init(int side) {
+		this.side = side;
 		all.add(this);
 	}
 	

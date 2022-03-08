@@ -1,9 +1,11 @@
-package Gui;
+package Listeners;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
+import Gui.Field;
+import Gui.GameEndMenu;
 import Main.main;
 import Main.util;
 import Movement.Location;
@@ -21,6 +23,11 @@ public class FieldListener implements MouseListener{
 	
 	@Override
 	public void mousePressed(MouseEvent e) {
+		
+		if(!main.gameRuns) {
+			GameEndMenu.display();
+			return;
+		}
 		
 		if(field.isMarked()) { //Zug wird gemacht
 			for(Move m : new ArrayList<Move>(main.lastSelected.getPlayableMoves())) {

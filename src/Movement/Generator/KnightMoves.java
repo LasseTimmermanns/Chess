@@ -25,8 +25,11 @@ public class KnightMoves {
 						if(!cover) break;
 					case Piece.CAN_HIT:
 						out.add(new Move(k, loc, true));
-						if(loc.getField().getCurrentPiece().getType() == Piece.TYPE_KING) main.check();
-						
+						Piece p = loc.getField().getCurrentPiece();
+						if(p.getType() == Piece.TYPE_KING && p.getColor() != k.getColor()){
+							main.howToStopChess.add(k.getLocation()); 
+							main.check();
+						}
 						break;
 					case Piece.POSSIBLE_MOVE:
 						out.add(new Move(k, loc, false));

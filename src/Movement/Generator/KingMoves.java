@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 import Gui.Field;
 import Main.main;
+import Main.util;
 import Movement.Location;
 import Movement.Move;
 import Piece.King;
+import Piece.Knight;
 import Piece.Piece;
 import Piece.Rook;
 
@@ -18,20 +20,20 @@ public class KingMoves {
 		Location start = k.getLocation();
 		
 		//Rochade
-		if(!cover && !k.isAlreadyMoved()) {
+		if(!cover && !k.isAlreadyMoved() && !main.check) {
 			//König und Turm dürfen noch nicht bewegt worden sein, zwischen Turm und König keine Figuren
 			
-			//Links
 			for(Rook r : Rook.getAll()) {
 				if(r.isAlreadyMoved()) continue;
 				if(r.getColor() != k.getColor()) continue;
+				if(r.getSide() == 0) continue;
 				
 				boolean obstructed = false;
 				Location loc = new Location(k.getLocation().X + r.getSide(), k.getLocation().Y);
 				while(loc.isInBoard() && !obstructed) {
 					
 					Field f = Field.getFieldByLocation(loc);
-					if(f.isOccupied()) {
+					if(f.isOccupied() || f.isCoveredBy(util.switchColor(k.getColor()))) {
 						if(f.getCurrentPiece() == r) break;
 						obstructed = true;
 					}
@@ -44,9 +46,9 @@ public class KingMoves {
 					Location rookLoc = new Location(kingLoc.X - r.getSide(), kingLoc.Y);
 					out.add(new Move(k, kingLoc, r, rookLoc, false));
 				}
-			}
-			
+			}	
 		}
+
 		
 		//Alle möglichen Moves werden erstellt
 		for(int x = -1; x <= 1; x++) {
@@ -68,7 +70,9 @@ public class KingMoves {
 			}	
 		}
 		
+		
 		if(cover) return out;
+		
 		
 		int opponentsColor = k.getColor() == main.COLOR_WHITE ? main.COLOR_BLACK : main.COLOR_WHITE;		
 		for(Move move : new ArrayList<Move>(out)) { //Arraylist Kopie um ConcurrentModificationException zu vermeiden
