@@ -16,14 +16,19 @@ import Main.main;
 
 public class gui {
 	
+	//225, 180, 122
+	//156, 112, 56
+	//168, 122, 61
+	
 	public static JFrame jf; //Fenster
 	public static SideMenu side_menu;
 	public static JPanel board, frame; //Panels
 	public static final int WIDTH = 800, HEIGHT = 800; //Final Width und Height definiert
 	public static final int BOARD_MARGIN = 0; //Margin vom Brett zur Kante
 	public static final Color WHITE = new Color(255,253,208), BLACK = new Color(26,8,0); //Feld Farbwerte festgelegt
-	public static final Color FIELD_BORDER = new Color(77,38,0);//Randfarbe festgelegt
-	public static final Color BACKGROUND = new Color(156, 112, 56); //Hintergrundfarbe für JFrame erstellt
+	public static final Color FIELD_BORDER = new Color(64, 41, 4);//Randfarbe festgelegt
+	public static final Color SIDEMENU_BACKGROUND = FIELD_BORDER;//Randfarbe festgelegt
+	public static final Color BACKGROUND = new Color(191, 144, 69); //Hintergrundfarbe für JFrame erstellt
 	public static final Color MOVE_MARKER = new Color(61, 138, 56); //Farbe f�r die Markierungen, wenn man einen Zug machen kann
 	public static final Color CHESS_MARKER = new Color(252, 48, 3); //Farbe f�r die Markierungen, wenn der König unter Schach steht
 	public static final Color NO_WINNER = new Color(156, 112, 56); //Farbe f�r EndMenu wenn Unentschieden

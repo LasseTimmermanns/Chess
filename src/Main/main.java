@@ -115,13 +115,10 @@ public class main {
 		
 		if(chessMarked != null) chessMarked.resetBorder();
 		colorCanMove = colorCanMove == COLOR_WHITE ? COLOR_BLACK : COLOR_WHITE;
-				
-		//System.out.println("Next Move");
-		//howToStopChess.forEach(action->Field.getFieldByLocation(action).markMove());
 		howToStopChess.clear();
 		
 		for(Piece p : Piece.all) p.clearMoves();
-		if(newMove) Position_Array.add(allFields);
+		if(newMove) Position_Array.add(util.hashList(Piece.all.toArray()));
 		
 		updatePieceCoverings();
 		updatePieceMoves();

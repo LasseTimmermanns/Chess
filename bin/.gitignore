@@ -1,9 +1,6 @@
-/Movement/
 /Main/
-/Gui/
-/pieces/
-/end_menu/
-/side_menu/
-/Listeners/
-/Piece/
 /DataStructures/
+/Gui/
+/Listeners/
+/Movement/
+/Piece/

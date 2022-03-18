@@ -1,6 +1,7 @@
 package Piece;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import javax.swing.ImageIcon;
 
@@ -185,4 +186,23 @@ public class Piece {
 	public String toString() {
 		return getName() + " " + Integer.toString(getColor());
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(color, type, location.hashCode());
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Piece other = (Piece) obj;
+		return color == other.color && type == other.type && location.equals(other.location);
+	}
+	
+	
 }

@@ -33,4 +33,14 @@ public class util {
 		return color == main.COLOR_WHITE ? main.COLOR_BLACK : main.COLOR_WHITE;
 	}
 	
+	//https://stackoverflow.com/questions/3054449/how-to-properly-define-hash-function-for-a-list-of-objects
+	public static int hashList(Object[] list) {
+		int hashCode = 1;
+		for(Object obj : list) {
+			hashCode = 31*hashCode + (obj==null ? 0 : obj.hashCode());
+		}
+		
+		return hashCode;
+	}
+	
 }

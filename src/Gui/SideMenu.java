@@ -27,7 +27,7 @@ public class SideMenu extends JPanel{
 		menu = this;
 		
 		setLayout(new GridLayout(1, 3));
-		setBackground(new Color(135, 67, 0));
+		setBackground(gui.SIDEMENU_BACKGROUND);
 		setVisible(true);
 		
 		labels_icon.put(createJLabel(forfeit, SideMenuListeners.forfeit()), forfeit);

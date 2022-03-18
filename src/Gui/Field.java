@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -178,5 +179,22 @@ public class Field extends JLabel{
 	public Location getPosition() {
 		return location;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		if(currentPiece == null) return location.hashCode();
+		return Objects.hash(currentPiece.hashCode(), location.hashCode());
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Field other = (Field) obj;
+		return Objects.equals(currentPiece, other.currentPiece) && Objects.equals(location, other.location);
+	}
 }
